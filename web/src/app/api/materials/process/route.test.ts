@@ -3,9 +3,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const extractTextFromBuffer = vi.fn();
 const chunkSegments = vi.fn();
 const generateEmbeddingsWithFallback = vi.fn();
-const runOcrOnImage = vi.fn();
-const runOcrOnPdf = vi.fn();
-const isLowQualityText = vi.fn();
 
 const jobUpdates: Array<Record<string, unknown>> = [];
 const materialUpdates: Array<Record<string, unknown>> = [];
@@ -134,13 +131,6 @@ vi.mock("@/lib/materials/chunking", () => ({
 
 vi.mock("@/lib/ai/providers", () => ({
   generateEmbeddingsWithFallback: (...args: unknown[]) => generateEmbeddingsWithFallback(...args),
-  extractVisionTextWithFallback: vi.fn(),
-}));
-
-vi.mock("@/lib/materials/ocr", () => ({
-  runOcrOnImage: (...args: unknown[]) => runOcrOnImage(...args),
-  runOcrOnPdf: (...args: unknown[]) => runOcrOnPdf(...args),
-  isLowQualityText: (...args: unknown[]) => isLowQualityText(...args),
 }));
 
 describe("/api/materials/process", () => {

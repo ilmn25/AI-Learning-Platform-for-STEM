@@ -107,7 +107,9 @@ Student Flow
 **Material Ingestion + Retrieval**
 
 - Materials are extracted into structured segments (pages, slides, paragraphs).
-- Background processing runs OCR and generates embeddings for chunked retrieval.
+- Background processing is queue-driven on Supabase (`pgmq` + Supabase Cron + Edge Function worker).
+- Worker flow: upload -> enqueue -> process -> chunk -> embed -> status update (`ready` / `failed`).
+- Processing is text-only for RAG ingestion: extract text from PDF/DOCX/PPTX, then chunk and embed.
 - Blueprint generation retrieves top-ranked chunks with source metadata instead of raw concatenation.
 - Prompt quality and grounding behavior are environment-tunable (`AI_PROMPT_QUALITY_PROFILE`,
   `AI_GROUNDING_MODE`) for safe rollout.

@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { extractTextFromBuffer, MaterialKind, MaterialSegment } from "@/lib/materials/extract-text";
+import { extractTextFromBuffer, MaterialKind } from "@/lib/materials/extract-text";
 import { chunkSegments } from "@/lib/materials/chunking";
-import { extractVisionTextWithFallback, generateEmbeddingsWithFallback } from "@/lib/ai/providers";
-import { isLowQualityText, runOcrOnImage, runOcrOnPdf } from "@/lib/materials/ocr";
+import { generateEmbeddingsWithFallback } from "@/lib/ai/providers";
 
 export const runtime = "nodejs";
 
 const MATERIALS_BUCKET = "materials";
 const JOB_BATCH_SIZE = Number(process.env.MATERIAL_JOB_BATCH ?? 3);
 const LOCK_TIMEOUT_MINUTES = Number(process.env.MATERIAL_JOB_LOCK_MINUTES ?? 15);
-const VISION_PAGE_CONCURRENCY = Math.max(1, Number(process.env.VISION_PAGE_CONCURRENCY ?? 3) || 1);
 const MAX_JOB_ATTEMPTS = Number(process.env.MATERIAL_JOB_MAX_ATTEMPTS ?? 5);
 const TERMINAL_JOB_ERROR_FRAGMENTS = [
   "no embedding providers are configured",
-  "no vision providers are configured",
   "embedding dimension mismatch",
   "openai embeddings are not configured",
   "openrouter embeddings are not configured",
@@ -139,35 +136,24 @@ async function processMaterialJob(
   const kind = resolveKind(material.mime_type, material.metadata?.kind, material.storage_path);
 
   const extraction = await extractTextFromBuffer(buffer, kind);
-  let segments = extraction.segments;
-  const warnings = [...extraction.warnings];
-
-  if (extraction.status === "needs_vision") {
-    const ocrResult = await runOcrPipeline(
-      admin,
-      classId,
-      kind,
-      buffer,
-      material.mime_type ?? undefined,
-    );
-    segments = ocrResult.segments;
-    warnings.push(...ocrResult.warnings);
-  }
-
-  if (!segments.length) {
+  if (extraction.status !== "ready" || extraction.segments.length === 0) {
     await updateMaterialStatus(admin, materialId, material.metadata, {
-      status: "needs_vision",
-      warnings: warnings.length > 0 ? warnings : ["No text could be extracted."],
+      status: "failed",
+      warnings:
+        extraction.warnings.length > 0 ? extraction.warnings : ["No text could be extracted."],
       extraction_stats: extraction.stats,
     });
     return;
   }
 
-  const chunks = chunkSegments(segments);
+  const chunks = chunkSegments(extraction.segments);
   if (!chunks.length) {
     await updateMaterialStatus(admin, materialId, material.metadata, {
-      status: "needs_vision",
-      warnings: warnings.length > 0 ? warnings : ["No usable text chunks produced."],
+      status: "failed",
+      warnings:
+        extraction.warnings.length > 0
+          ? extraction.warnings
+          : ["No usable text chunks produced."],
       extraction_stats: extraction.stats,
     });
     return;
@@ -225,141 +211,9 @@ async function processMaterialJob(
 
   await updateMaterialStatus(admin, materialId, material.metadata, {
     status: "ready",
-    warnings,
+    warnings: extraction.warnings,
     extraction_stats: extraction.stats,
   });
-}
-
-async function runOcrPipeline(
-  admin: ReturnType<typeof createAdminSupabaseClient>,
-  classId: string,
-  kind: MaterialKind,
-  buffer: Buffer,
-  mimeType?: string,
-) {
-  const warnings: string[] = [];
-  if (kind === "image") {
-    const ocr = await runOcrOnImage(buffer);
-    if (isLowQualityText(ocr.text, ocr.confidence)) {
-      const vision = await extractVisionTextWithFallback({
-        prompt: "Extract all readable text. Describe diagrams and equations.",
-        images: [{ mimeType: mimeType ?? "image/png", data: buffer.toString("base64") }],
-      });
-      await logAiRequest(admin, {
-        class_id: classId,
-        provider: vision.provider,
-        model: vision.model,
-        purpose: "ocr",
-        prompt_tokens: vision.usage?.promptTokens ?? null,
-        completion_tokens: vision.usage?.completionTokens ?? null,
-        total_tokens: vision.usage?.totalTokens ?? null,
-        latency_ms: vision.latencyMs,
-        status: "ok",
-      });
-      return {
-        segments: [
-          {
-            text: vision.content,
-            sourceType: "image" as const,
-            sourceIndex: 1,
-            extractionMethod: "vision" as const,
-          },
-        ],
-        warnings: ["OCR low quality; used vision fallback."],
-      };
-    }
-
-    return {
-      segments: [
-        {
-          text: ocr.text,
-          sourceType: "image" as const,
-          sourceIndex: 1,
-          extractionMethod: "ocr" as const,
-          qualityScore: ocr.confidence,
-        },
-      ],
-      warnings,
-    };
-  }
-
-  if (kind === "pdf") {
-    const { results, pageCount, totalPages } = await runOcrOnPdf(buffer);
-    const segments = await mapWithConcurrency(
-      results,
-      VISION_PAGE_CONCURRENCY,
-      async (result, index) => {
-        if (isLowQualityText(result.text, result.confidence)) {
-          const vision = await extractVisionTextWithFallback({
-            prompt: "Extract all readable text. Describe diagrams and equations.",
-            images: [{ mimeType: "image/png", data: result.imageBuffer.toString("base64") }],
-          });
-          await logAiRequest(admin, {
-            class_id: classId,
-            provider: vision.provider,
-            model: vision.model,
-            purpose: "ocr",
-            prompt_tokens: vision.usage?.promptTokens ?? null,
-            completion_tokens: vision.usage?.completionTokens ?? null,
-            total_tokens: vision.usage?.totalTokens ?? null,
-            latency_ms: vision.latencyMs,
-            status: "ok",
-          });
-          return {
-            text: vision.content,
-            sourceType: "page",
-            sourceIndex: index + 1,
-            extractionMethod: "vision",
-          } satisfies MaterialSegment;
-        }
-
-        return {
-          text: result.text,
-          sourceType: "page",
-          sourceIndex: index + 1,
-          extractionMethod: "ocr",
-          qualityScore: result.confidence,
-        } satisfies MaterialSegment;
-      },
-    );
-
-    if (totalPages > pageCount) {
-      warnings.push(`OCR limited to first ${pageCount} pages.`);
-    }
-
-    return { segments, warnings };
-  }
-
-  return { segments: [], warnings: ["OCR not supported for this material type."] };
-}
-
-async function mapWithConcurrency<T, R>(
-  items: T[],
-  limit: number,
-  mapper: (item: T, index: number) => Promise<R>,
-) {
-  if (limit <= 1 || items.length <= 1) {
-    const results: R[] = [];
-    for (let index = 0; index < items.length; index += 1) {
-      results.push(await mapper(items[index], index));
-    }
-    return results;
-  }
-
-  const results = new Array<R>(items.length);
-  let nextIndex = 0;
-  const runners = Array.from({ length: Math.min(limit, items.length) }, async () => {
-    while (true) {
-      const current = nextIndex;
-      nextIndex += 1;
-      if (current >= items.length) {
-        break;
-      }
-      results[current] = await mapper(items[current], current);
-    }
-  });
-  await Promise.all(runners);
-  return results;
 }
 
 function resolveKind(mimeType?: string | null, metadataKind?: string, path?: string) {

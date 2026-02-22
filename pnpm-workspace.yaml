@@ -4,5 +4,4 @@ packages:
 ignoredBuiltDependencies:
   - esbuild
   - sharp
-  - tesseract.js
   - unrs-resolver

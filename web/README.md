@@ -26,7 +26,7 @@ pnpm dev
 
 - Auth with Supabase
 - Class creation and join code enrollment
-- Materials upload with PDF/DOCX/PPTX extraction (images require vision)
+- Materials upload with PDF/DOCX/PPTX extraction
 - Course blueprint generation (AI powered)
 - AI powered learning activities
 
@@ -39,9 +39,7 @@ pnpm dev
 - Disable Supabase phone auth provider (phone-based auth is intentionally out of scope).
 - Ensure the `materials` storage bucket exists for uploads.
 - Configure at least one AI provider with both a chat model and an embedding model.
-- Configure a vision model when processing images or low quality scans (OCR fallback).
-- Set `CRON_SECRET` to protect `POST /api/materials/process` (requires `x-cron-secret` header or Bearer token in `Authorization` header). If unset, restrict access at the infrastructure layer (e.g., IP allowlist).
-- Schedule `POST /api/materials/process` (for example with Vercel Cron) so queued material jobs are actually processed.
-- Tune `VISION_PAGE_CONCURRENCY` to control parallel Vision calls for low-quality PDF pages.
-- `web/vercel.json` includes a daily cron schedule for `/api/materials/process` (Hobby-plan safe). On Pro, change to `*/5 * * * *`.
+- Default background ingestion backend is `MATERIAL_WORKER_BACKEND=supabase`, which enqueues jobs through Supabase `pgmq`.
+- Supabase Cron dispatches the `material-worker` Edge Function (configured by migration and Vault secrets).
+- `POST /api/materials/process` is a legacy fallback worker path when `MATERIAL_WORKER_BACKEND=legacy`.
 - For full staging + production rollout steps, see `../DEPLOYMENT.md`.

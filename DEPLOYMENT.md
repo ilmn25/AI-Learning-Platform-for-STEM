@@ -23,7 +23,7 @@ For each project, configure:
 
 - Auth email confirmation: enabled
 - Phone auth provider: disabled
-- Database extensions: `pgcrypto` and `vector` (created by migration)
+- Database extensions required by migrations (`pgcrypto`, `vector`, `pgmq`, `pg_net`, `pg_cron`, `vault`)
 
 ## 3. Apply migrations to staging
 
@@ -45,7 +45,47 @@ npx supabase link --project-ref <PRODUCTION_PROJECT_REF>
 npx supabase db push
 ```
 
-## 5. Configure Vercel project
+## 5. Deploy Supabase Edge Function worker
+
+From repo root:
+
+```bash
+npx supabase functions deploy material-worker
+```
+
+`supabase/functions/material-worker/config.toml` sets `verify_jwt = false` because dispatch auth is handled via `MATERIAL_WORKER_TOKEN`.
+
+Set function secrets for each project:
+
+```bash
+npx supabase secrets set MATERIAL_WORKER_TOKEN="<strong-random-token>"
+```
+
+Also set required AI and worker tuning secrets on Supabase (same values used by web app where relevant):
+
+- `AI_PROVIDER_DEFAULT`
+- `OPENROUTER_API_KEY`, `OPENROUTER_EMBEDDING_MODEL` (and optional metadata envs)
+- `OPENAI_API_KEY`, `OPENAI_EMBEDDING_MODEL` (if used)
+- `GEMINI_API_KEY`, `GEMINI_EMBEDDING_MODEL` (if used)
+- `EMBEDDING_DIM=1536`
+- `MATERIAL_WORKER_BATCH=3`
+- `MATERIAL_JOB_MAX_ATTEMPTS=5`
+- `MATERIAL_JOB_VISIBILITY_TIMEOUT_SECONDS=300`
+- `MATERIAL_JOB_LOCK_MINUTES=15`
+- `PDF_TEXT_PAGE_LIMIT=40`
+
+## 6. Configure Supabase Vault secrets for dispatch
+
+Run in SQL editor for each project:
+
+```sql
+select vault.create_secret('https://<project-ref>.supabase.co', 'project_url');
+select vault.create_secret('<same-material-worker-token>', 'material_worker_token');
+```
+
+The migration-created cron job (`material-worker-dispatch-30s`) calls `public.run_material_worker_dispatch()` which reads these secrets to invoke the worker securely.
+
+## 7. Configure Vercel project
 
 In Vercel project settings:
 
@@ -53,13 +93,9 @@ In Vercel project settings:
 - Install command: `pnpm install`
 - Build command: `pnpm build`
 
-This repository includes `web/vercel.json` with a daily cron schedule for:
+`web/vercel.json` no longer schedules material processing cron.
 
-- `GET /api/materials/process` (Vercel cron requests use `GET`)
-
-For Hobby plans, Vercel cron is limited to daily execution, so queued materials can wait up to 24 hours before processing. On Pro, update the schedule to `*/5 * * * *` for near-real-time material processing.
-
-## 6. Configure environment variables
+## 8. Configure Vercel environment variables
 
 Set these in Vercel for both Preview (staging Supabase) and Production (production Supabase):
 
@@ -80,7 +116,6 @@ Legacy fallback names (optional):
 - `OPENROUTER_API_KEY`
 - `OPENROUTER_MODEL`
 - `OPENROUTER_EMBEDDING_MODEL`
-- `OPENROUTER_VISION_MODEL`
 
 ### Recommended AI metadata
 
@@ -88,39 +123,26 @@ Legacy fallback names (optional):
 - `OPENROUTER_APP_NAME`
 - `OPENROUTER_BASE_URL` (optional; defaults to OpenRouter API)
 
-### Job and extraction settings
+### Material processing backend
 
-- `CRON_SECRET` (required to protect `/api/materials/process`)
-- `EMBEDDING_DIM=1536`
-- `VISION_PAGE_CONCURRENCY=3`
-- `MATERIAL_JOB_MAX_ATTEMPTS=5`
+- `MATERIAL_WORKER_BACKEND=supabase` (default recommended)
+- Optional fallback-only route worker secret: `CRON_SECRET`
 
-## 7. Cron authentication
-
-`/api/materials/process` enforces `CRON_SECRET` when it is set.
-
-Accepted auth formats:
-
-- `Authorization: Bearer <CRON_SECRET>`
-- `x-cron-secret: <CRON_SECRET>`
-
-Ensure your scheduler sends one of these. If using Vercel Cron, configure secret-based auth with `CRON_SECRET`.
-
-## 8. Deployment flow
+## 9. Deployment flow
 
 - Pull requests -> Preview deployment (staging env vars)
 - Merge to `main` -> Production deployment (production env vars)
 
-## 9. Post-deploy smoke tests
+## 10. Post-deploy smoke tests
 
 - Register teacher and student accounts
 - Teacher creates class and uploads a material
-- Material processing reaches `ready` status
+- Material processing reaches `ready` status (without Vercel cron)
 - Blueprint generation succeeds
 - Student joins class and accesses at least one assignment
 
-## 10. Rollback
+## 11. Rollback
 
 - App rollback: promote previous Vercel deployment
 - Database rollback: restore from Supabase backup/PITR or forward-fix with a new migration
-- Emergency pause: remove cron schedule or rotate `CRON_SECRET`
+- Worker rollback: set `MATERIAL_WORKER_BACKEND=legacy` in Vercel and trigger `/api/materials/process` with `CRON_SECRET`

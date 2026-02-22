@@ -28,6 +28,10 @@ function redirectWithError(path: string, message: string) {
 const MAX_JOIN_CODE_ATTEMPTS = 5;
 const MATERIALS_BUCKET = "materials";
 
+function resolveMaterialWorkerBackend() {
+  return (process.env.MATERIAL_WORKER_BACKEND ?? "supabase").toLowerCase();
+}
+
 async function requireTeacherAccess(
   classId: string,
   userId: string,
@@ -226,12 +230,23 @@ export async function uploadMaterial(classId: string, formData: FormData) {
 
   let jobFailed = false;
   if (processingStatus === "processing") {
-    const { error: jobError } = await supabase.from("material_processing_jobs").insert({
-      material_id: materialRow.id,
-      class_id: classId,
-      status: "pending",
-      stage: "queued",
-    });
+    const workerBackend = resolveMaterialWorkerBackend();
+    const jobError =
+      workerBackend === "supabase"
+        ? (
+            await supabase.rpc("enqueue_material_job", {
+              p_material_id: materialRow.id,
+              p_class_id: classId,
+            })
+          ).error
+        : (
+            await supabase.from("material_processing_jobs").insert({
+              material_id: materialRow.id,
+              class_id: classId,
+              status: "pending",
+              stage: "queued",
+            })
+          ).error;
 
     if (jobError) {
       jobFailed = true;
