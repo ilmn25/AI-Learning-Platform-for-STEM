@@ -18,4 +18,7 @@ This folder contains SQL migrations for the core schema.
 - Use the Supabase secret key for server side jobs (never in client code).
 - The `materials` storage bucket is created by the baseline migration if it does not exist.
 - `material_chunks.embedding` uses `vector(1536)`; if you change embedding models, update the migration and `EMBEDDING_DIM` to match.
+- Material background processing is queue-driven through `pgmq` + cron + Edge Function (`material-worker`).
+- `0009_remove_vision_legacy_artifacts.sql` normalizes legacy vision/OCR material rows and clears optional vault keys for retired vision settings.
+- Required Vault secrets for cron dispatch: `project_url`, `material_worker_token`.
 - Full environment rollout steps (staging + production): see `DEPLOYMENT.md`.

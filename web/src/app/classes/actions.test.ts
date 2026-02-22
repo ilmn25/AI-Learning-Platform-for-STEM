@@ -103,6 +103,7 @@ async function expectRedirect(action: () => Promise<void> | void, path: string) 
 describe("class actions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    delete process.env.MATERIAL_WORKER_BACKEND;
     vi.mocked(requireVerifiedUser).mockResolvedValue({
       supabase: {
         from: supabaseFromMock,
@@ -245,8 +246,7 @@ describe("class actions", () => {
 
     vi.mocked(detectMaterialKind).mockReturnValue(null);
 
-    const message =
-      "Unsupported file type. Allowed: .pdf, .docx, .pptx, .png, .jpg, .jpeg, .webp, .gif";
+    const message = "Unsupported file type. Allowed: .pdf, .docx, .pptx";
     const encodedMessage = encodeURIComponent(message);
 
     await expectRedirect(
@@ -257,6 +257,46 @@ describe("class actions", () => {
   });
 
   it("uploads a material and redirects with success", async () => {
+    const file = new File([Buffer.from("hello")], "lecture.pdf", {
+      type: "application/pdf",
+    });
+    const formData = new FormData();
+    formData.set("file", file);
+    formData.set("title", "Lecture 1");
+
+    vi.mocked(detectMaterialKind).mockReturnValue("pdf");
+    vi.mocked(sanitizeFilename).mockReturnValue("lecture.pdf");
+    supabaseRpcMock.mockResolvedValueOnce({ data: "job-1", error: null });
+
+    supabaseFromMock.mockImplementation((table: string) => {
+      if (table === "classes") {
+        return makeBuilder({
+          data: { id: "class-1", owner_id: "u1" },
+          error: null,
+        });
+      }
+      if (table === "enrollments") {
+        return makeBuilder({ data: null, error: null });
+      }
+      if (table === "materials") {
+        return makeBuilder({ data: { id: "m1" }, error: null });
+      }
+      return makeBuilder({ data: null, error: null });
+    });
+
+    await expectRedirect(
+      () => uploadMaterial("class-1", formData),
+      "/classes/class-1?uploaded=processing",
+    );
+    expect(redirect).toHaveBeenCalled();
+    expect(supabaseRpcMock).toHaveBeenCalledWith("enqueue_material_job", {
+      p_material_id: "m1",
+      p_class_id: "class-1",
+    });
+  });
+
+  it("uses legacy job table insert when MATERIAL_WORKER_BACKEND is not supabase", async () => {
+    process.env.MATERIAL_WORKER_BACKEND = "legacy";
     const file = new File([Buffer.from("hello")], "lecture.pdf", {
       type: "application/pdf",
     });
@@ -290,7 +330,10 @@ describe("class actions", () => {
       () => uploadMaterial("class-1", formData),
       "/classes/class-1?uploaded=processing",
     );
-    expect(redirect).toHaveBeenCalled();
+    expect(supabaseRpcMock).not.toHaveBeenCalledWith(
+      "enqueue_material_job",
+      expect.anything(),
+    );
   });
 
   it("blocks class creation for student accounts", async () => {

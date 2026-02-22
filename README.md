@@ -77,9 +77,10 @@ pnpm dev
 - Inputs validated on every API route and server action.
 - File uploads are size-limited and content-type checked.
 - AI context restricted to approved materials and the blueprint.
-- Set `CRON_SECRET` to protect `POST /api/materials/process` (requires `x-cron-secret` header or Bearer token in `Authorization` header). If unset, restrict access at the infrastructure layer (e.g., IP allowlist).
-- Configure provider-specific embedding models (and vision models if using OCR fallback) so background material processing can complete.
-- Schedule `POST /api/materials/process` (for example with Vercel Cron) to drain the processing queue.
+- Material ingestion is queue-driven on Supabase (`pgmq` + Supabase Cron + Edge Function worker) to avoid Vercel Cron plan limits.
+- Set Vault secrets `project_url` and `material_worker_token` in Supabase for worker dispatch auth.
+- Configure provider-specific embedding models so background material processing can complete.
+- `POST /api/materials/process` remains available as a legacy fallback path when `MATERIAL_WORKER_BACKEND=legacy`.
 
 **Docs**
 

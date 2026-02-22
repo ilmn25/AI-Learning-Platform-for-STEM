@@ -19,6 +19,8 @@ This roadmap focuses on production ready delivery with subject agnostic function
 - Status update: Auth hardening complete with verified-email gates, immutable global account
   types (`teacher`/`student`), split teacher/student dashboards, and enrollment escalation
   protections at the database layer.
+- Status update: Material ingestion migrated to Supabase-native queue workers (`pgmq` + cron + edge function),
+  removing Vercel cron plan bottlenecks while preserving existing status lifecycle.
 
 **Phase 2 - Activity Engine**
 

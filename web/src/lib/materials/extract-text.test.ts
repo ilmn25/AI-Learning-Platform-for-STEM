@@ -57,9 +57,9 @@ describe("detectMaterialKind", () => {
 });
 
 describe("extractTextFromBuffer", () => {
-  it("returns needs_vision for images", async () => {
+  it("fails extraction for images", async () => {
     const result = await extractTextFromBuffer(Buffer.from("fake"), "image");
-    expect(result.status).toBe("needs_vision");
+    expect(result.status).toBe("failed");
     expect(result.text).toBe("");
     expect(result.warnings.length).toBeGreaterThan(0);
   });

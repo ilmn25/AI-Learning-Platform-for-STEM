@@ -9,14 +9,14 @@ export type MaterialSegment = {
   sourceType: "page" | "slide" | "paragraph" | "image";
   sourceIndex: number;
   sectionTitle?: string;
-  extractionMethod: "text" | "ocr" | "vision";
+  extractionMethod: "text";
   qualityScore?: number;
 };
 
 export type MaterialExtraction = {
   text: string;
   segments: MaterialSegment[];
-  status: "ready" | "needs_vision" | "failed";
+  status: "ready" | "failed";
   warnings: string[];
   pageCount?: number;
   stats: {
@@ -31,21 +31,12 @@ const MIME_TO_KIND: Record<string, MaterialKind> = {
   "application/pdf": "pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
-  "image/png": "image",
-  "image/jpeg": "image",
-  "image/webp": "image",
-  "image/gif": "image",
 };
 
 const EXT_TO_KIND: Record<string, MaterialKind> = {
   ".pdf": "pdf",
   ".docx": "docx",
   ".pptx": "pptx",
-  ".png": "image",
-  ".jpg": "image",
-  ".jpeg": "image",
-  ".webp": "image",
-  ".gif": "image",
 };
 
 export function detectMaterialKind(file: File) {
@@ -102,7 +93,10 @@ export async function extractTextFromBuffer(
       });
 
       const combined = segments.map((segment) => segment.text).join("\n");
-      const status = combined.trim().length === 0 ? "needs_vision" : "ready";
+      const status = combined.trim().length === 0 ? "failed" : "ready";
+      if (status === "failed") {
+        warnings.push("PDF extraction returned empty text.");
+      }
 
       return buildExtractionResult({
         segments,
@@ -145,8 +139,8 @@ export async function extractTextFromBuffer(
 
     return buildExtractionResult({
       segments: [],
-      status: "needs_vision",
-      warnings: ["Image extraction requires OCR/vision."],
+      status: "failed",
+      warnings: ["Image extraction is not supported. Upload PDF, DOCX, or PPTX."],
     });
   } catch (error) {
     return buildExtractionResult({
@@ -225,7 +219,7 @@ function splitParagraphs(text: string) {
 
 function buildExtractionResult(input: {
   segments: MaterialSegment[];
-  status: "ready" | "needs_vision" | "failed";
+  status: "ready" | "failed";
   warnings: string[];
   pageCount?: number;
 }): MaterialExtraction {

@@ -65,12 +65,12 @@ export default function MaterialUploadForm({ action }: MaterialUploadFormProps) 
           id="file"
           name="file"
           type="file"
-          accept=".pdf,.docx,.pptx,image/*"
+          accept=".pdf,.docx,.pptx"
           required
           className="w-full rounded-xl border border-white/10 bg-slate-950 px-4 py-2 text-sm text-slate-100 file:mr-4 file:rounded-full file:border-0 file:bg-cyan-400/90 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-slate-950"
         />
         <p className="text-xs text-slate-500">
-          PDF, DOCX, PPTX, or image files. Max {maxSizeMb}MB.
+          PDF, DOCX, or PPTX files. Max {maxSizeMb}MB.
         </p>
       </div>
       <SubmitButton />

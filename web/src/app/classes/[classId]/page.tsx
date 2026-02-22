@@ -600,7 +600,7 @@ export default async function ClassOverviewPage({
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 lg:col-span-1">
               <h2 className="text-lg font-semibold">Upload materials</h2>
               <p className="mt-2 text-sm text-slate-400">
-                Supported formats: PDF, DOCX, PPTX. Images require vision extraction.
+                Supported formats: PDF, DOCX, PPTX.
               </p>
               <MaterialUploadForm action={uploadMaterial.bind(null, classRow.id)} />
             </div>
