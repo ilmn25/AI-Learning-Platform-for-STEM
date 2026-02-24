@@ -155,7 +155,7 @@ export default async function BlueprintPage({
     : null;
 
   return (
-    <div className="min-h-screen surface-page text-slate-900">
+    <div className="min-h-screen surface-page text-ui-primary">
       <AuthHeader
         activeNav="dashboard"
         classContext={{ classId: classRow.id, isTeacher }}
@@ -167,9 +167,9 @@ export default async function BlueprintPage({
       />
       <div className="mx-auto w-full max-w-6xl px-6 py-16">
         <header className="mb-10 space-y-2">
-          <p className="text-sm font-medium text-slate-500">Course Blueprint</p>
+          <p className="text-sm font-medium text-ui-muted">Course Blueprint</p>
           <h1 className="text-3xl font-semibold">{classRow.title}</h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-ui-muted">
             {classRow.subject || "General"} · {classRow.level || "Mixed level"}
           </p>
         </header>
@@ -181,41 +181,41 @@ export default async function BlueprintPage({
         ) : null}
 
         {generatedMessage ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-6 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {generatedMessage}
           </div>
         ) : null}
         {savedMessage ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-6 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {savedMessage}
           </div>
         ) : null}
         {approvedMessage ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-6 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {approvedMessage}
           </div>
         ) : null}
         {publishedMessage ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-6 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {publishedMessage}
           </div>
         ) : null}
         {draftedMessage ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-6 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {draftedMessage}
           </div>
         ) : null}
 
         <section className="grid gap-6 lg:grid-cols-3">
-          <div className="rounded-3xl border border-slate-200 bg-white p-6 lg:col-span-2">
+          <div className="rounded-3xl border border-default bg-white p-6 lg:col-span-2">
             <h2 className="text-lg font-semibold">Blueprint workspace</h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-ui-muted">
               Edit the draft, approve for overview, and publish when ready.
             </p>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white p-6">
+          <div className="rounded-3xl border border-default bg-white p-6">
             <h2 className="text-lg font-semibold">Materials check</h2>
-            <p className="mt-2 text-sm text-slate-500">
+            <p className="mt-2 text-sm text-ui-muted">
               {materialCount === 0
                 ? "Upload materials before generating the blueprint."
                 : readyMaterialCount > 0
@@ -228,10 +228,10 @@ export default async function BlueprintPage({
                   label="Generate blueprint"
                   pendingLabel="Generating blueprint..."
                   disabled={!hasReadyMaterials}
-                  className="mt-6 w-full rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/40"
+                  className="mt-6 w-full rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-ui-primary hover:bg-accent-strong disabled:cursor-not-allowed disabled:bg-accent-soft"
                 />
                 {!hasReadyMaterials ? (
-                  <p className="mt-3 text-xs text-slate-500">
+                  <p className="mt-3 text-xs text-ui-muted">
                     {materialCount > 0
                       ? processingMaterialCount > 0
                         ? `${processingMaterialCount} material${processingMaterialCount === 1 ? " is" : "s are"} still processing.`
@@ -241,19 +241,19 @@ export default async function BlueprintPage({
                 ) : null}
               </form>
             ) : (
-              <p className="mt-4 text-xs text-slate-500">
+              <p className="mt-4 text-xs text-ui-muted">
                 Only teachers can regenerate the blueprint.
               </p>
             )}
           </div>
         </section>
 
-        <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-6">
+        <section className="mt-10 rounded-3xl border border-default bg-white p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Draft editor</h2>
             <Link
               href={`/classes/${classRow.id}`}
-              className="ui-motion-color text-xs font-medium text-slate-500 hover:text-slate-700"
+              className="ui-motion-color text-xs font-medium text-ui-muted hover:text-ui-subtle"
             >
               Back to class
             </Link>

@@ -103,7 +103,7 @@ export default async function EditQuizDraftPage({
   });
 
   return (
-    <div className="min-h-screen surface-page text-slate-900">
+    <div className="min-h-screen surface-page text-ui-primary">
       <AuthHeader
         activeNav="dashboard"
         accountType="teacher"
@@ -117,15 +117,15 @@ export default async function EditQuizDraftPage({
 
       <div className="mx-auto w-full max-w-5xl px-6 py-16">
         <header className="mb-8 space-y-2">
-          <p className="text-sm font-medium text-slate-500">Teacher Studio</p>
+          <p className="text-sm font-medium text-ui-muted">Teacher Studio</p>
           <h1 className="text-3xl font-semibold">{activity.title}</h1>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-ui-muted">
             Status: {activity.status === "published" ? "Published" : "Draft"}
           </p>
         </header>
 
         {createdMessage ? (
-          <div className="mb-4 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-4 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {createdMessage}
           </div>
         ) : null}

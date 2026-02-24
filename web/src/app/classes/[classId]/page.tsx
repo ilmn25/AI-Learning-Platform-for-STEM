@@ -304,17 +304,17 @@ export default async function ClassOverviewPage({
   });
 
   return (
-    <div className="min-h-screen surface-page text-slate-900">
+    <div className="min-h-screen surface-page text-ui-primary">
       <AuthHeader
         activeNav="dashboard"
         classContext={{ classId: classRow.id, isTeacher }}
         breadcrumbs={[{ label: "Dashboard", href: "/teacher/dashboard" }, { label: classRow.title }]}
       />
       <div className="mx-auto w-full max-w-5xl px-6 py-16">
-        <header className="mb-10 rounded-[2rem] border border-[#e7dece] bg-white px-7 py-7 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e8577]">Class Overview</p>
-          <h1 className="editorial-title mt-2 text-4xl text-slate-900">{classRow.title}</h1>
-          <p className="mt-2 text-sm text-slate-500">
+        <header className="mb-10 rounded-[2rem] border border-default bg-white px-7 py-7 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ui-subtle">Class Overview</p>
+          <h1 className="editorial-title mt-2 text-4xl text-ui-primary">{classRow.title}</h1>
+          <p className="mt-2 text-sm text-ui-muted">
             {classRow.subject || "General"} · {classRow.level || "Mixed level"}
           </p>
         </header>
@@ -332,34 +332,34 @@ export default async function ClassOverviewPage({
         ) : null}
 
         <section className="mb-8 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+          <div className="rounded-2xl border border-default bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ui-subtle">
               Blueprint
             </p>
-            <p className="mt-2 text-sm font-semibold text-slate-900">
+            <p className="mt-2 text-sm font-semibold text-ui-primary">
               {publishedBlueprint ? "Published and active" : "Draft / pending publication"}
             </p>
           </div>
-          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+          <div className="rounded-2xl border border-default bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ui-subtle">
               Assignments
             </p>
-            <p className="mt-2 text-sm font-semibold text-slate-900">{totalAssignments} recent assignments</p>
+            <p className="mt-2 text-sm font-semibold text-ui-primary">{totalAssignments} recent assignments</p>
           </div>
-          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+          <div className="rounded-2xl border border-default bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ui-subtle">
               Materials
             </p>
-            <p className="mt-2 text-sm font-semibold text-slate-900">
+            <p className="mt-2 text-sm font-semibold text-ui-primary">
               {materials?.length ?? 0} item{(materials?.length ?? 0) === 1 ? "" : "s"}
             </p>
           </div>
         </section>
 
         <section className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Course blueprint</h2>
-            <p className="mt-2 text-sm text-slate-600">
+            <p className="mt-2 text-sm text-ui-muted">
               {isTeacher
                 ? "Generate a structured blueprint from uploaded materials to unlock AI activities."
                 : publishedBlueprint
@@ -376,36 +376,36 @@ export default async function ClassOverviewPage({
             ) : publishedBlueprint ? (
               <Link
                 href={`/classes/${classRow.id}/blueprint/published`}
-                className="ui-motion-lift mt-6 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-sm font-semibold text-[#874934] hover:-translate-y-0.5 hover:bg-[#fbefe7]"
+                className="ui-motion-lift mt-6 inline-flex rounded-xl border border-accent px-4 py-2 text-sm font-semibold text-accent hover:-translate-y-0.5 hover:bg-accent-soft"
               >
                 View published blueprint
               </Link>
             ) : (
-              <span className="mt-6 inline-flex rounded-xl border border-[#ddd3c2] px-4 py-2 text-sm text-slate-500">
+              <span className="mt-6 inline-flex rounded-xl border border-default px-4 py-2 text-sm text-ui-muted">
                 Awaiting publication
               </span>
             )}
           </div>
-          <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Enrollment</h2>
             {isTeacher ? (
-              <div className="mt-3 rounded-2xl border border-[#d3b092] bg-[#fdf1eb] px-4 py-3 text-sm text-[#8c4b35]">
+              <div className="mt-3 rounded-2xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
                 Join code: <span className="font-semibold">{classRow.join_code}</span>
               </div>
             ) : (
-              <p className="mt-3 text-sm text-slate-500">You are enrolled in this class.</p>
+              <p className="mt-3 text-sm text-ui-muted">You are enrolled in this class.</p>
             )}
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-ui-muted">
               {classRow.description || "Add a class description and upload materials to begin."}
             </p>
           </div>
         </section>
 
-        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+        <section className="mt-10 rounded-3xl border border-default bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">AI Chat</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-ui-muted">
                 {publishedBlueprint
                   ? "Always-on class chat is available for teachers and students. Use this panel to monitor student chat history."
                   : "Publish the blueprint to unlock always-on chat and assignment chat experiences."}
@@ -414,7 +414,7 @@ export default async function ClassOverviewPage({
             <div className="flex flex-wrap gap-2">
               <Link
                 href="#teacher-chat-monitor"
-                className="ui-motion-color rounded-xl border border-[#ddd3c2] px-4 py-2 text-xs font-semibold text-slate-600 hover:border-[#c8a786] hover:bg-[#f9f3e8] hover:text-[#844633]"
+                className="ui-motion-color rounded-xl border border-default px-4 py-2 text-xs font-semibold text-ui-muted hover:border-accent hover:bg-accent-soft hover:text-accent"
               >
                 Open chat monitor
               </Link>
@@ -428,29 +428,29 @@ export default async function ClassOverviewPage({
           </div>
 
           <div className="mt-5 space-y-3">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+            <p className="text-xs uppercase tracking-[0.2em] text-ui-muted">
               Recent chat assignments
             </p>
             {teacherChatAssignments.length > 0 ? (
               teacherChatAssignments.slice(0, 5).map((assignment) => (
                 <div
                   key={assignment.assignmentId}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
-                    <p className="text-xs text-slate-500">{formatDueDate(assignment.dueAt)}</p>
+                    <p className="text-sm font-semibold text-ui-primary">{assignment.title}</p>
+                    <p className="text-xs text-ui-muted">{formatDueDate(assignment.dueAt)}</p>
                   </div>
                   <Link
                     href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                    className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                    className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                   >
                     Review
                   </Link>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-ui-muted">
                 No chat assignments yet. Create one to start collecting student submissions.
               </p>
             )}
@@ -467,11 +467,11 @@ export default async function ClassOverviewPage({
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+        <section className="mt-10 rounded-3xl border border-default bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Quizzes</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-ui-muted">
                 {publishedBlueprint
                   ? "Generate, curate, publish, and assign blueprint-grounded quizzes."
                   : "Publish the blueprint to unlock quiz generation."}
@@ -489,61 +489,61 @@ export default async function ClassOverviewPage({
 
           {isTeacher ? (
             <div className="mt-5 space-y-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.2em] text-ui-muted">
                 Recent quiz assignments
               </p>
               {teacherQuizAssignments.length > 0 ? (
                 teacherQuizAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
-                      <p className="text-xs text-slate-500">{formatDueDate(assignment.dueAt)}</p>
+                      <p className="text-sm font-semibold text-ui-primary">{assignment.title}</p>
+                      <p className="text-xs text-ui-muted">{formatDueDate(assignment.dueAt)}</p>
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Review
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-ui-muted">
                   No quiz assignments yet. Generate and publish a quiz draft to begin.
                 </p>
               )}
             </div>
           ) : (
             <div className="mt-5 space-y-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.2em] text-ui-muted">
                 Your quiz assignments
               </p>
               {studentQuizAssignments.length > 0 ? (
                 studentQuizAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-sm font-semibold text-ui-primary">{assignment.title}</p>
+                      <p className="text-xs text-ui-muted">
                         {formatDueDate(assignment.dueAt)} · Status:{" "}
                         {formatAssignmentStatus(assignment.status)}
                       </p>
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/quiz`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Open
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-ui-muted">
                   No quiz assignments yet. Your teacher will publish them here.
                 </p>
               )}
@@ -551,11 +551,11 @@ export default async function ClassOverviewPage({
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+        <section className="mt-10 rounded-3xl border border-default bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Flashcards</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-ui-muted">
                 {publishedBlueprint
                   ? "Generate, curate, publish, and assign blueprint-grounded flashcards."
                   : "Publish the blueprint to unlock flashcard generation."}
@@ -573,61 +573,61 @@ export default async function ClassOverviewPage({
 
           {isTeacher ? (
             <div className="mt-5 space-y-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.2em] text-ui-muted">
                 Recent flashcards assignments
               </p>
               {teacherFlashcardsAssignments.length > 0 ? (
                 teacherFlashcardsAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
-                      <p className="text-xs text-slate-500">{formatDueDate(assignment.dueAt)}</p>
+                      <p className="text-sm font-semibold text-ui-primary">{assignment.title}</p>
+                      <p className="text-xs text-ui-muted">{formatDueDate(assignment.dueAt)}</p>
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Review
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-ui-muted">
                   No flashcards assignments yet. Generate and publish a draft to begin.
                 </p>
               )}
             </div>
           ) : (
             <div className="mt-5 space-y-3">
-              <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+              <p className="text-xs uppercase tracking-[0.2em] text-ui-muted">
                 Your flashcards assignments
               </p>
               {studentFlashcardsAssignments.length > 0 ? (
                 studentFlashcardsAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-sm font-semibold text-ui-primary">{assignment.title}</p>
+                      <p className="text-xs text-ui-muted">
                         {formatDueDate(assignment.dueAt)} · Status:{" "}
                         {formatAssignmentStatus(assignment.status)}
                       </p>
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/flashcards`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Open
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-ui-muted">
                   No flashcards assignments yet. Your teacher will publish them here.
                 </p>
               )}
@@ -637,17 +637,17 @@ export default async function ClassOverviewPage({
 
         {isTeacher ? (
           <section className="mt-10 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm lg:col-span-1">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm lg:col-span-1">
               <h2 className="text-lg font-semibold">Upload materials</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-ui-muted">
                 Supported formats: PDF, DOCX, PPTX.
               </p>
               <MaterialUploadForm action={uploadMaterial.bind(null, classRow.id)} />
             </div>
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm lg:col-span-2">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm lg:col-span-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Materials library</h2>
-                <span className="text-xs font-medium tracking-wide text-slate-500">
+                <span className="text-xs font-medium tracking-wide text-ui-muted">
                   {materials?.length ?? 0} items
                 </span>
               </div>
@@ -656,7 +656,7 @@ export default async function ClassOverviewPage({
                   materials.map((material) => (
                     <div
                       key={material.id}
-                      className="flex flex-col gap-1 rounded-2xl border border-slate-200 bg-white p-4"
+                      className="flex flex-col gap-1 rounded-2xl border border-default bg-white p-4"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="text-sm font-semibold">{material.title}</p>
@@ -664,10 +664,10 @@ export default async function ClassOverviewPage({
                           <span
                             className={`rounded-full border px-3 py-1 text-xs ${
                               material.status === "processing"
-                                ? "border-[#d3b092] bg-[#fdf1eb] text-[#8a4934]"
+                                ? "border-accent bg-accent-soft text-accent"
                                 : material.status === "failed"
                                   ? "border-rose-500/40 bg-rose-500/10 text-rose-700"
-                                  : "border-slate-200 text-slate-500"
+                                  : "border-default text-ui-muted"
                             }`}
                           >
                             {material.status === "processing"
@@ -677,11 +677,11 @@ export default async function ClassOverviewPage({
                                 : material.status || "Pending"}
                           </span>
                           {material.status === "processing" ? (
-                            <span className="h-2 w-2 animate-pulse rounded-full bg-[#cb9f82]" />
+                            <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
                           ) : null}
                         </div>
                       </div>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-ui-muted">
                         {material.mime_type || "unknown type"} ·{" "}
                         {material.size_bytes
                           ? `${Math.round(material.size_bytes / 1024)} KB`
@@ -696,14 +696,14 @@ export default async function ClassOverviewPage({
                         </ul>
                       ) : null}
                       {material.status === "processing" ? (
-                        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-200">
-                          <div className="h-full w-2/3 animate-pulse rounded-full bg-[#cfad94]" />
+                        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-[var(--border-default)]">
+                          <div className="h-full w-2/3 animate-pulse rounded-full bg-accent" />
                         </div>
                       ) : null}
                     </div>
                   ))
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-[#dfd5c4] bg-[#f7f2e8] p-4 text-sm text-slate-500">
+                  <div className="rounded-2xl border border-dashed border-default bg-[var(--surface-muted)] p-4 text-sm text-ui-muted">
                     No materials yet. Upload materials to begin blueprint generation.
                   </div>
                 )}
@@ -712,34 +712,34 @@ export default async function ClassOverviewPage({
           </section>
         ) : (
           <section className="mt-10 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Student hub</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-ui-muted">
                 Use open practice chat, then complete chat assignments as they are published.
               </p>
               <Link
                 href={`/classes/${classRow.id}/chat`}
-                className="ui-motion-color mt-4 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                className="ui-motion-color mt-4 inline-flex rounded-xl border border-accent px-4 py-2 text-xs font-semibold text-accent hover:bg-accent-soft"
               >
                 Open practice chat
               </Link>
             </div>
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Blueprint status</h2>
               {publishedBlueprint ? (
                 <>
-                  <p className="mt-2 text-sm text-slate-600">
+                  <p className="mt-2 text-sm text-ui-muted">
                     The latest blueprint is published and ready.
                   </p>
                   <Link
                     href={`/classes/${classRow.id}/blueprint/published`}
-                    className="ui-motion-color mt-4 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                    className="ui-motion-color mt-4 inline-flex rounded-xl border border-accent px-4 py-2 text-xs font-semibold text-accent hover:bg-accent-soft"
                   >
                     View published blueprint
                   </Link>
                 </>
               ) : (
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-ui-muted">
                   Awaiting teacher approval. Check back soon for AI powered activities.
                 </p>
               )}

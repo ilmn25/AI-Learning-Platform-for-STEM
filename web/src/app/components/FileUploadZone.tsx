@@ -165,7 +165,7 @@ export default function FileUploadZone({
       );
     }
     return (
-      <svg className="h-5 w-5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+      <svg className="h-5 w-5 text-subtle" fill="currentColor" viewBox="0 0 20 20">
         <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
       </svg>
     );
@@ -181,10 +181,10 @@ export default function FileUploadZone({
         onDrop={handleDrop}
         className={`cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all ${
           disabled
-            ? "cursor-not-allowed border-slate-200 bg-slate-50"
+            ? "cursor-not-allowed border-default bg-[var(--surface-muted)]"
             : isDragging
-              ? "border-slate-400 bg-slate-100"
-              : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
+              ? "border-default bg-[var(--surface-muted)]"
+              : "border-default bg-white hover:border-default hover:bg-[var(--surface-muted)]"
         }`}
       >
         <input
@@ -197,9 +197,9 @@ export default function FileUploadZone({
           className="hidden"
         />
         <div className="flex flex-col items-center gap-3">
-          <div className={`rounded-full p-3 ${isDragging ? "bg-slate-200" : ""}`}>
+          <div className={`rounded-full p-3 ${isDragging ? "bg-[var(--border-default)]" : ""}`}>
             <svg
-              className={`h-8 w-8 ${isDragging ? "text-slate-600" : "text-slate-400"}`}
+              className={`h-8 w-8 ${isDragging ? "text-muted" : "text-subtle"}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -213,14 +213,14 @@ export default function FileUploadZone({
             </svg>
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-700">
+            <p className="text-sm font-medium text-ui-primary">
               {isDragging ? "Drop files here" : "Drag and drop files here"}
             </p>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-subtle">
               or click to browse (max {maxFiles} files, {maxSizeMB}MB each)
             </p>
           </div>
-          <p className="text-xs text-slate-400">Accepted: {accept}</p>
+          <p className="text-xs text-subtle">Accepted: {accept}</p>
         </div>
       </div>
 
@@ -228,7 +228,7 @@ export default function FileUploadZone({
       {files.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-slate-700">
+            <p className="text-sm font-medium text-ui-primary">
               Files ({files.length})
             </p>
             <button
@@ -237,7 +237,7 @@ export default function FileUploadZone({
                 setFiles([]);
                 onFilesChange?.([]);
               }}
-              className="text-xs text-slate-500 hover:text-slate-700"
+              className="text-xs text-subtle hover:text-ui-primary"
             >
               Clear all
             </button>
@@ -249,24 +249,24 @@ export default function FileUploadZone({
                 className={`flex items-center gap-3 rounded-lg border p-3 ${
                   file.status === "error"
                     ? "border-red-200 bg-red-50"
-                    : "border-slate-200 bg-white"
+                    : "border-default bg-white"
                 }`}
               >
                 <div className="shrink-0">{getFileIcon(file.file.type)}</div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-slate-700">
+                  <p className="truncate text-sm font-medium text-ui-primary">
                     {file.file.name}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-subtle">
                     {formatFileSize(file.file.size)}
                   </p>
                   {file.error && (
                     <p className="mt-1 text-xs text-red-600">{file.error}</p>
                   )}
                   {file.status === "uploading" && (
-                    <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-slate-200">
+                    <div className="mt-2 h-1 w-full overflow-hidden rounded-full bg-[var(--border-default)]">
                       <div
-                        className="h-full rounded-full bg-slate-600 transition-all duration-300"
+                        className="h-full rounded-full bg-[var(--text-muted)] transition-all duration-300"
                         style={{ width: `${file.progress}%` }}
                       />
                     </div>
@@ -276,7 +276,7 @@ export default function FileUploadZone({
                   type="button"
                   onClick={() => removeFile(file.id)}
                   disabled={file.status === "uploading"}
-                  className="shrink-0 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:cursor-not-allowed"
+                  className="shrink-0 rounded-lg p-1.5 text-subtle hover:bg-[var(--surface-muted)] hover:text-ui-primary disabled:cursor-not-allowed"
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

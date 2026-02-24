@@ -190,24 +190,24 @@ export default function Sidebar({ accountType, userEmail, userDisplayName, class
 
   return (
     <aside
-      className="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-[#e5dece] bg-[#fdfbf7] transition-all duration-300"
+      className="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-default bg-[var(--background)] transition-all duration-300"
       style={{ width: "var(--sidebar-width)" }}
     >
-      <div className="flex h-16 items-center justify-between border-b border-[#e5dece] px-4">
+      <div className="flex h-16 items-center justify-between border-b border-default px-4">
         {!isCompact && (
           <Link
             href={accountType === "teacher" ? "/teacher/dashboard" : "/student/dashboard"}
             className="flex items-center gap-2"
           >
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1d1d1b] text-[#f8f2ea]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--foreground)] text-white">
               <BrandMark className="h-4 w-4" />
             </div>
-            <span className="text-sm font-semibold text-slate-900">Learning Platform</span>
+            <span className="text-sm font-semibold text-ui-primary">Learning Platform</span>
           </Link>
         )}
         <button
           onClick={() => setIsCollapsed((value) => !value)}
-          className="ui-motion-color flex h-10 w-10 items-center justify-center rounded-full border border-[#d9cfbe] bg-[#fffaf2] text-slate-500 hover:border-[#cfa884] hover:text-[#8f4934]"
+          className="ui-motion-color flex h-10 w-10 items-center justify-center rounded-full border border-default bg-white text-ui-muted hover:border-accent hover:text-accent"
           aria-label={isCompact ? "Expand sidebar" : "Collapse sidebar"}
           type="button"
         >
@@ -222,8 +222,8 @@ export default function Sidebar({ accountType, userEmail, userDisplayName, class
             href={item.href}
             className={`ui-motion-color flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium ${
               isActive(item.href)
-                ? "border border-[#d7b79a] bg-[#fdf1eb] text-[#8d4833]"
-                : "text-slate-600 hover:bg-[#f4efe4] hover:text-slate-900"
+                ? "border border-accent bg-accent-soft text-accent"
+                : "text-ui-muted hover:bg-[var(--surface-muted)] hover:text-ui-primary"
             }`}
             title={isCompact ? item.label : undefined}
           >
@@ -234,11 +234,11 @@ export default function Sidebar({ accountType, userEmail, userDisplayName, class
       </nav>
 
       {classId && !isCompact && (
-        <div className="border-t border-[#e5dece] px-4 py-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Current Class</p>
+        <div className="border-t border-default px-4 py-4">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-ui-muted">Current Class</p>
           <Link
             href={`/classes/${classId}`}
-            className="ui-motion-color flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-[#f4efe4] hover:text-slate-900"
+            className="ui-motion-color flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-ui-muted hover:bg-[var(--surface-muted)] hover:text-ui-primary"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path
@@ -252,21 +252,21 @@ export default function Sidebar({ accountType, userEmail, userDisplayName, class
         </div>
       )}
 
-      <div className="border-t border-[#e5dece] p-4">
+      <div className="border-t border-default p-4">
         {!isCompact ? (
           <div className="flex items-center justify-between">
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#ebe4d8] text-sm font-medium text-slate-600">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[var(--surface-muted)] text-sm font-medium text-ui-muted">
                 {userEmail?.charAt(0).toUpperCase() || "U"}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-slate-900">
+                <p className="truncate text-sm font-medium text-ui-primary">
                   {userDisplayName || userEmail || "User"}
                 </p>
                 {userDisplayName && userEmail ? (
-                  <p className="truncate text-xs font-medium text-slate-600">{userEmail}</p>
+                  <p className="truncate text-xs font-medium text-ui-muted">{userEmail}</p>
                 ) : null}
-                <p className="truncate text-xs text-slate-500">
+                <p className="truncate text-xs text-ui-muted">
                   {accountType === "teacher" ? "Teacher" : "Student"}
                 </p>
               </div>
@@ -274,7 +274,7 @@ export default function Sidebar({ accountType, userEmail, userDisplayName, class
           </div>
         ) : (
           <div className="flex justify-center">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ebe4d8] text-sm font-medium text-slate-600">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-muted)] text-sm font-medium text-ui-muted">
               {userEmail?.charAt(0).toUpperCase() || "U"}
             </div>
           </div>
@@ -282,7 +282,7 @@ export default function Sidebar({ accountType, userEmail, userDisplayName, class
         <form action={signOut} className={`mt-3 ${isCompact ? "flex justify-center" : ""}`}>
           <button
             type="submit"
-            className={`ui-motion-color flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-rose-50 hover:text-rose-700 ${
+            className={`ui-motion-color flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-ui-muted hover:bg-rose-50 hover:text-rose-700 ${
               isCompact ? "w-full" : ""
             }`}
           >

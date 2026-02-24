@@ -105,19 +105,19 @@ export default async function WelcomePage({
   const dashboardHref = accountType === "teacher" ? "/teacher/dashboard" : "/student/dashboard";
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[var(--surface-muted)]">
       <div className="mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-6 py-16">
         <div className="w-full text-center">
           <div className="mb-8 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-lg">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--foreground)] text-white shadow-lg">
               <BrandMark className="h-9 w-9" />
             </div>
           </div>
 
-          <h1 className="text-4xl font-bold text-slate-900">
+          <h1 className="text-4xl font-bold text-ui-primary">
             Welcome to Learning Platform
           </h1>
-          <p className="mt-4 text-lg text-slate-600">
+          <p className="mt-4 text-lg text-ui-muted">
             {accountType === "teacher"
               ? "Your AI-powered teaching assistant is ready."
               : "Your AI-powered learning experience awaits."}
@@ -129,14 +129,14 @@ export default async function WelcomePage({
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              className="flex gap-4 rounded-2xl border border-default bg-white p-6 shadow-sm"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[var(--surface-muted)] text-ui-muted">
                 {feature.icon}
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900">{feature.title}</h3>
-                <p className="mt-1 text-sm text-slate-600">{feature.description}</p>
+                <h3 className="font-semibold text-ui-primary">{feature.title}</h3>
+                <p className="mt-1 text-sm text-ui-muted">{feature.description}</p>
               </div>
             </div>
           ))}
@@ -146,13 +146,13 @@ export default async function WelcomePage({
         <div className="mt-12 flex flex-col items-center gap-4">
           <Link
             href={dashboardHref}
-            className="rounded-xl bg-slate-900 px-8 py-3 text-base font-semibold text-white hover:bg-slate-800"
+            className="rounded-xl bg-[var(--foreground)] px-8 py-3 text-base font-semibold text-white hover:opacity-90"
           >
             Go to Dashboard
           </Link>
           <Link
             href={dashboardHref}
-            className="text-sm text-slate-500 hover:text-slate-700"
+            className="text-sm text-ui-muted hover:text-ui-subtle"
           >
             Skip for now
           </Link>
