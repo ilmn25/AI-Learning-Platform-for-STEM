@@ -74,7 +74,7 @@ export default function TeacherChatMonitorPanel({ classId }: TeacherChatMonitorP
           heading="Student chat history"
         />
       ) : (
-        <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+        <p className="rounded-xl border border-dashed border-default bg-[var(--surface-muted)] px-4 py-6 text-sm text-slate-500">
           Select a student to view chat history.
         </p>
       )}

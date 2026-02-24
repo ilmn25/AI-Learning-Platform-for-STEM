@@ -111,7 +111,7 @@ export default async function BlueprintPublishedPage({
           </Link>
         </header>
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-6">
+        <div className="rounded-3xl border border-default bg-white p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
@@ -130,8 +130,8 @@ export default async function BlueprintPublishedPage({
           </div>
         </div>
 
-        <section className="mt-10 rounded-4xl border border-slate-200 bg-white text-slate-900 shadow-2xl">
-          <div className="border-b border-slate-200 px-10 py-8">
+        <section className="mt-10 rounded-4xl border border-default bg-white text-slate-900 shadow-2xl">
+          <div className="border-b border-default px-10 py-8">
             <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Compiled Blueprint</p>
             <h2 className="mt-3 text-3xl font-semibold text-slate-900">{classRow.title}</h2>
             <p className="mt-2 text-sm text-slate-500">
@@ -139,7 +139,7 @@ export default async function BlueprintPublishedPage({
             </p>
           </div>
           <div className="px-10 py-8">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+            <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-6">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Summary
               </p>
@@ -151,7 +151,7 @@ export default async function BlueprintPublishedPage({
             <div className="mt-8 space-y-6">
               {topics && topics.length > 0 ? (
                 topics.map((topic) => (
-                  <div key={topic.id} className="rounded-2xl border border-slate-200 bg-white p-6">
+                  <div key={topic.id} className="rounded-2xl border border-default bg-white p-6">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="text-xl font-semibold text-slate-900">{topic.title}</h3>
@@ -161,7 +161,7 @@ export default async function BlueprintPublishedPage({
                           </p>
                         ) : null}
                       </div>
-                      <span className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-500">
+                      <span className="rounded-full border border-default px-3 py-1 text-xs text-slate-500">
                         Sequence {topic.sequence}
                       </span>
                     </div>
@@ -188,7 +188,7 @@ export default async function BlueprintPublishedPage({
                   </div>
                 ))
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-default bg-[var(--surface-muted)] p-6 text-sm text-slate-500">
                   No topics found in this blueprint.
                 </div>
               )}

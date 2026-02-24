@@ -271,14 +271,14 @@ export default function ClassChatWorkspace({
 
   return (
     <div className="grid gap-4 lg:grid-cols-[18rem_minmax(0,1fr)]">
-      <aside className="rounded-3xl border border-slate-200 bg-white p-4">
+      <aside className="rounded-3xl border border-default bg-white p-4">
         <div className="mb-4 flex items-center justify-between gap-2">
           <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-600">Chats</h3>
           {!readOnly ? (
             <button
               type="button"
               onClick={handleNewChat}
-              className="rounded-lg border border-cyan-400/40 px-2.5 py-1 text-xs font-semibold text-cyan-700 hover:bg-cyan-400/10"
+              className="rounded-lg border border-accent px-2.5 py-1 text-xs font-semibold text-accent hover:bg-accent-soft"
             >
               New
             </button>
@@ -294,8 +294,8 @@ export default function ClassChatWorkspace({
                   key={session.id}
                   className={`rounded-xl border px-3 py-2 ${
                     isSelected
-                      ? "border-cyan-400/50 bg-cyan-400/10"
-                      : "border-slate-200 bg-slate-50"
+                      ? "border-accent bg-accent-soft"
+                      : "border-default bg-[var(--surface-muted)]"
                   }`}
                 >
                   <button
@@ -319,15 +319,15 @@ export default function ClassChatWorkspace({
               );
             })
           ) : (
-            <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-3 text-xs text-slate-500">
+            <p className="rounded-xl border border-dashed border-default bg-[var(--surface-muted)] p-3 text-xs text-slate-500">
               {isSessionPending ? "Loading chats..." : "No chat sessions yet."}
             </p>
           )}
         </div>
       </aside>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-4">
-        <header className="mb-4 border-b border-slate-200 pb-4">
+      <section className="rounded-3xl border border-default bg-white p-4">
+        <header className="mb-4 border-b border-default pb-4">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Always-on AI Chat</p>
           <h2 className="mt-1 text-xl font-semibold text-slate-900">
             {heading || selectedSession?.title || "Class conversation"}
@@ -349,14 +349,14 @@ export default function ClassChatWorkspace({
           </div>
         ) : null}
 
-        <div className="max-h-[32rem] space-y-3 overflow-y-auto rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <div className="max-h-[32rem] space-y-3 overflow-y-auto rounded-2xl border border-default bg-[var(--surface-muted)] p-4">
           {pageInfo.hasMore ? (
             <div className="flex justify-center">
               <button
                 type="button"
                 onClick={handleLoadOlder}
                 disabled={isLoadingMore}
-                className="rounded-full border border-white/20 px-4 py-1 text-xs text-slate-600 hover:bg-cyan-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full border border-white/20 px-4 py-1 text-xs text-slate-600 hover:bg-accent-soft disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isLoadingMore ? "Loading older messages..." : "Load older messages"}
               </button>
@@ -389,10 +389,10 @@ export default function ClassChatWorkspace({
                     ) : null}
                   </article>
                 ) : (
-                  <article className="max-w-[85%] rounded-2xl border border-cyan-400/30 bg-cyan-400/10 p-4 text-cyan-700">
-                    <div className="mb-2 flex items-center justify-between gap-4 text-xs uppercase tracking-[0.2em] text-cyan-700">
+                  <article className="max-w-[85%] rounded-2xl border border-accent bg-accent-soft p-4 text-accent">
+                    <div className="mb-2 flex items-center justify-between gap-4 text-xs uppercase tracking-[0.2em] text-accent">
                       <span>{turn.authorKind === "teacher" ? "Teacher" : "You"}</span>
-                      <span className="text-cyan-600">{formatTime(turn.createdAt)}</span>
+                      <span className="text-accent">{formatTime(turn.createdAt)}</span>
                     </div>
                     <p className="whitespace-pre-wrap text-sm">{turn.content}</p>
                   </article>
@@ -438,7 +438,7 @@ export default function ClassChatWorkspace({
               maxLength={MAX_CHAT_MESSAGE_CHARS}
               rows={4}
               placeholder="Ask a question to learn, review, or consolidate your understanding..."
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
             />
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs text-slate-500">
@@ -447,14 +447,14 @@ export default function ClassChatWorkspace({
               <button
                 type="submit"
                 disabled={isPending || !message.trim() || !selectedSessionId}
-                className="rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:bg-cyan-400/40"
+                className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:bg-accent-soft"
               >
                 {isPending ? "Thinking..." : "Send"}
               </button>
             </div>
           </form>
         ) : (
-          <p className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-500">
+          <p className="mt-4 rounded-xl border border-default bg-[var(--surface-muted)] px-4 py-3 text-xs text-slate-500">
             Read-only monitor mode. Students can continue chatting in their own workspace.
           </p>
         )}

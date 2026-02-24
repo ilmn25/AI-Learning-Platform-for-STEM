@@ -43,7 +43,7 @@ export default async function SettingsPage({
 
           <section className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="space-y-6">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-slate-900">Account Information</h2>
                 <p className="mt-2 text-sm text-slate-600">Core identity and role details.</p>
 
@@ -69,7 +69,7 @@ export default async function SettingsPage({
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-slate-900">Profile Name</h2>
                 <p className="mt-2 text-sm text-slate-600">
                   This name appears in shared class experiences and chat surfaces.
@@ -99,7 +99,7 @@ export default async function SettingsPage({
                       minLength={2}
                       maxLength={60}
                       defaultValue={profile.display_name ?? ""}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                      className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus-ring-warm"
                       placeholder="e.g., Dr. Fa"
                     />
                   </div>
@@ -113,7 +113,7 @@ export default async function SettingsPage({
             </div>
 
             <div className="space-y-6">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-slate-900">Change Password</h2>
                 <p className="mt-2 text-sm text-slate-600">
                   Confirm your current password before setting a new one.
@@ -141,7 +141,7 @@ export default async function SettingsPage({
                       name="current_password"
                       type="password"
                       required
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                      className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus-ring-warm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -154,7 +154,7 @@ export default async function SettingsPage({
                       type="password"
                       required
                       minLength={8}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                      className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus-ring-warm"
                     />
                   </div>
                   <div className="space-y-2">
@@ -167,7 +167,7 @@ export default async function SettingsPage({
                       type="password"
                       required
                       minLength={8}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                      className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus-ring-warm"
                     />
                   </div>
                   <PendingSubmitButton
@@ -178,7 +178,7 @@ export default async function SettingsPage({
                 </form>
               </div>
 
-              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+              <div className="rounded-3xl border border-default bg-[var(--surface-muted)] p-6">
                 <h2 className="text-lg font-semibold text-slate-900">Security Notes</h2>
                 <ul className="mt-3 space-y-2 text-sm text-slate-600">
                   <li>Your role and class permissions are enforced by secure server checks.</li>

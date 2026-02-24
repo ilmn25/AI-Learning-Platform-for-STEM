@@ -51,7 +51,7 @@ export default async function JoinClassPage({
               id="join_code"
               name="join_code"
               required
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm tracking-[0.25em] text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm tracking-[0.25em] text-slate-900 outline-none focus-ring-warm"
               placeholder="AB12CD"
             />
           </div>

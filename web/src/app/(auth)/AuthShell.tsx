@@ -46,7 +46,7 @@ export default function AuthShell({
         </Link>
 
         <div className="grid flex-1 items-center gap-8 lg:grid-cols-[minmax(0,0.9fr),minmax(0,1.1fr)]">
-          <section className="hero-card rounded-[2rem] border-[#ddd2c2] bg-white/90 p-8 shadow-sm">
+          <section className="hero-card rounded-[2rem] border-default bg-white/90 p-8 shadow-sm">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8c4a35]">{eyebrow}</p>
             <h1 className="editorial-title mt-4 text-4xl leading-tight text-slate-900">{title}</h1>
             <p className="mt-4 text-sm text-slate-600">{description}</p>

@@ -5,7 +5,7 @@ export default function NewQuizDraftLoading() {
         <div className="h-6 w-40 rounded bg-white/10" />
         <div className="h-10 w-full rounded bg-white/10" />
         <div className="h-10 w-full rounded bg-white/10" />
-        <div className="h-10 w-48 rounded bg-cyan-400/30" />
+        <div className="h-10 w-48 rounded bg-accent-soft" />
       </div>
     </div>
   );

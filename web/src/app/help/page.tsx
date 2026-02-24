@@ -24,7 +24,7 @@ export default async function HelpPage() {
           </header>
 
           <section className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-slate-900">Frequently Asked Questions</h2>
               <div className="mt-6 space-y-6">
                 {content.faq.map((item) => (
@@ -37,7 +37,7 @@ export default async function HelpPage() {
             </div>
 
             <div className="space-y-6">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-slate-900">What To Do Now</h2>
                 <p className="mt-2 text-sm text-slate-600">
                   Recommended next steps for your {accountType} workflow.
@@ -45,14 +45,14 @@ export default async function HelpPage() {
                 <ul className="mt-4 space-y-3 text-sm text-slate-700">
                   {content.checklist.map((item) => (
                     <li key={item} className="flex items-start gap-2">
-                      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-cyan-600" />
+                      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent-strong" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+              <div className="rounded-3xl border border-default bg-[var(--surface-muted)] p-6">
                 <h2 className="text-lg font-semibold text-slate-900">Support Scope</h2>
                 <p className="mt-2 text-sm text-slate-600">
                   Account profile rename and password change are available in Settings. For

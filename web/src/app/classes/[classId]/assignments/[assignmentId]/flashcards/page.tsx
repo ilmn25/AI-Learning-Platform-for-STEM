@@ -166,7 +166,7 @@ export default async function FlashcardsAssignmentPage({
         ) : null}
 
         {latestSubmission ? (
-          <div className="mb-6 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+          <div className="mb-6 rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-600">
             <p>
               Latest session: {latestCounts.knownCount} known, {latestCounts.reviewCount} to review
             </p>

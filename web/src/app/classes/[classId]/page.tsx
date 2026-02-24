@@ -332,7 +332,7 @@ export default async function ClassOverviewPage({
         ) : null}
 
         <section className="mb-8 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
+          <div className="rounded-2xl border border-default bg-white p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
               Blueprint
             </p>
@@ -340,13 +340,13 @@ export default async function ClassOverviewPage({
               {publishedBlueprint ? "Published and active" : "Draft / pending publication"}
             </p>
           </div>
-          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
+          <div className="rounded-2xl border border-default bg-white p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
               Assignments
             </p>
             <p className="mt-2 text-sm font-semibold text-slate-900">{totalAssignments} recent assignments</p>
           </div>
-          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
+          <div className="rounded-2xl border border-default bg-white p-4">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
               Materials
             </p>
@@ -357,7 +357,7 @@ export default async function ClassOverviewPage({
         </section>
 
         <section className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Course blueprint</h2>
             <p className="mt-2 text-sm text-slate-600">
               {isTeacher
@@ -386,7 +386,7 @@ export default async function ClassOverviewPage({
               </span>
             )}
           </div>
-          <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+          <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Enrollment</h2>
             {isTeacher ? (
               <div className="mt-3 rounded-2xl border border-[#d3b092] bg-[#fdf1eb] px-4 py-3 text-sm text-[#8c4b35]">
@@ -401,7 +401,7 @@ export default async function ClassOverviewPage({
           </div>
         </section>
 
-        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+        <section className="mt-10 rounded-3xl border border-default bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">AI Chat</h2>
@@ -435,7 +435,7 @@ export default async function ClassOverviewPage({
               teacherChatAssignments.slice(0, 5).map((assignment) => (
                 <div
                   key={assignment.assignmentId}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                 >
                   <div>
                     <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
@@ -467,7 +467,7 @@ export default async function ClassOverviewPage({
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+        <section className="mt-10 rounded-3xl border border-default bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Quizzes</h2>
@@ -496,7 +496,7 @@ export default async function ClassOverviewPage({
                 teacherQuizAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
                       <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
@@ -525,7 +525,7 @@ export default async function ClassOverviewPage({
                 studentQuizAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
                       <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
@@ -551,7 +551,7 @@ export default async function ClassOverviewPage({
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+        <section className="mt-10 rounded-3xl border border-default bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Flashcards</h2>
@@ -580,7 +580,7 @@ export default async function ClassOverviewPage({
                 teacherFlashcardsAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
                       <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
@@ -609,7 +609,7 @@ export default async function ClassOverviewPage({
                 studentFlashcardsAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3"
                   >
                     <div>
                       <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
@@ -637,14 +637,14 @@ export default async function ClassOverviewPage({
 
         {isTeacher ? (
           <section className="mt-10 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm lg:col-span-1">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm lg:col-span-1">
               <h2 className="text-lg font-semibold">Upload materials</h2>
               <p className="mt-2 text-sm text-slate-600">
                 Supported formats: PDF, DOCX, PPTX.
               </p>
               <MaterialUploadForm action={uploadMaterial.bind(null, classRow.id)} />
             </div>
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm lg:col-span-2">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm lg:col-span-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Materials library</h2>
                 <span className="text-xs font-medium tracking-wide text-slate-500">
@@ -656,7 +656,7 @@ export default async function ClassOverviewPage({
                   materials.map((material) => (
                     <div
                       key={material.id}
-                      className="flex flex-col gap-1 rounded-2xl border border-slate-200 bg-white p-4"
+                      className="flex flex-col gap-1 rounded-2xl border border-default bg-white p-4"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="text-sm font-semibold">{material.title}</p>
@@ -667,7 +667,7 @@ export default async function ClassOverviewPage({
                                 ? "border-[#d3b092] bg-[#fdf1eb] text-[#8a4934]"
                                 : material.status === "failed"
                                   ? "border-rose-500/40 bg-rose-500/10 text-rose-700"
-                                  : "border-slate-200 text-slate-500"
+                                  : "border-default text-slate-500"
                             }`}
                           >
                             {material.status === "processing"
@@ -696,14 +696,14 @@ export default async function ClassOverviewPage({
                         </ul>
                       ) : null}
                       {material.status === "processing" ? (
-                        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-200">
+                        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-[var(--border-default)]">
                           <div className="h-full w-2/3 animate-pulse rounded-full bg-[#cfad94]" />
                         </div>
                       ) : null}
                     </div>
                   ))
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-[#dfd5c4] bg-[#f7f2e8] p-4 text-sm text-slate-500">
+                  <div className="rounded-2xl border border-dashed border-default bg-[#f7f2e8] p-4 text-sm text-slate-500">
                     No materials yet. Upload materials to begin blueprint generation.
                   </div>
                 )}
@@ -712,7 +712,7 @@ export default async function ClassOverviewPage({
           </section>
         ) : (
           <section className="mt-10 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Student hub</h2>
               <p className="mt-2 text-sm text-slate-600">
                 Use open practice chat, then complete chat assignments as they are published.
@@ -724,7 +724,7 @@ export default async function ClassOverviewPage({
                 Open practice chat
               </Link>
             </div>
-            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Blueprint status</h2>
               {publishedBlueprint ? (
                 <>

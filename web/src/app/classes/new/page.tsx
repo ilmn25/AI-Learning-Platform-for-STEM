@@ -49,7 +49,7 @@ export default async function NewClassPage({
                 id="title"
                 name="title"
                 required
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
                 placeholder="Calculus I - Derivatives"
               />
             </div>
@@ -60,7 +60,7 @@ export default async function NewClassPage({
               <input
                 id="subject"
                 name="subject"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
                 placeholder="Mathematics"
               />
             </div>
@@ -71,7 +71,7 @@ export default async function NewClassPage({
               <input
                 id="level"
                 name="level"
-                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
                 placeholder="High school / College"
               />
             </div>
@@ -85,7 +85,7 @@ export default async function NewClassPage({
               id="description"
               name="description"
               rows={4}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
               placeholder="Optional context about the class."
             />
           </div>

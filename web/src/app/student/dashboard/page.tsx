@@ -254,7 +254,7 @@ export default async function StudentDashboardPage() {
                       <Link
                         key={assignment.id}
                         href={`/classes/${assignment.classId}/assignments/${assignment.id}/${assignment.activityType}`}
-                        className="ui-motion-lift flex items-center justify-between rounded-xl border border-[#e5d2c4] bg-white p-3 shadow-sm hover:border-[#ccac8c] hover:shadow-md"
+                        className="ui-motion-lift flex items-center justify-between rounded-xl border border-default bg-white p-3 shadow-sm hover:border-[#ccac8c] hover:shadow-md"
                       >
                         <div className="flex items-center gap-3">
                           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f9ebe3] text-[#99513b]">
@@ -325,7 +325,7 @@ export default async function StudentDashboardPage() {
                   return (
                     <div
                       key={classItem.id}
-                      className="ui-motion-lift group rounded-2xl border border-[#e6dece] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#cfab8a] hover:shadow-md"
+                      className="ui-motion-lift group rounded-2xl border border-default bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#cfab8a] hover:shadow-md"
                     >
                       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e8577]">Student</p>
                       <Link href={`/classes/${classItem.id}`} className="mt-2 block">
@@ -352,7 +352,7 @@ export default async function StudentDashboardPage() {
                   );
                 })
               ) : (
-                <div className="rounded-2xl border border-dashed border-[#dfd5c4] bg-[#f7f2e8] p-6 text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-default bg-[#f7f2e8] p-6 text-sm text-slate-500">
                   No classes joined yet. Use a join code from your teacher.
                 </div>
               )}

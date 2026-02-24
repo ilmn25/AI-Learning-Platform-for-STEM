@@ -19,7 +19,7 @@ export default function ClassWorkspaceShell({
 }: ClassWorkspaceShellProps) {
   return (
     <section className="space-y-4">
-      <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <header className="rounded-3xl border border-default bg-white p-6 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Focused Workspace</p>
@@ -29,7 +29,7 @@ export default function ClassWorkspaceShell({
           <button
             type="button"
             onClick={onExit}
-            className="ui-motion-color rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-600 hover:border-cyan-300 hover:text-cyan-700"
+            className="ui-motion-color rounded-xl border border-default bg-white px-4 py-2 text-xs font-semibold text-slate-600 hover:border-accent hover:text-accent"
           >
             Back to overview
           </button>
@@ -37,10 +37,10 @@ export default function ClassWorkspaceShell({
       </header>
 
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <div className="ui-motion-lift min-h-[32rem] rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="ui-motion-lift min-h-[32rem] rounded-3xl border border-default bg-white p-4 shadow-sm">
           {main}
         </div>
-        <aside className="ui-motion-lift rounded-3xl border border-slate-200 bg-white p-4 shadow-sm">
+        <aside className="ui-motion-lift rounded-3xl border border-default bg-white p-4 shadow-sm">
           {sidebar}
         </aside>
       </div>

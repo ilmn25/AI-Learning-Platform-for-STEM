@@ -104,7 +104,7 @@ export default async function TeacherDashboardPage() {
                   return (
                     <div
                       key={classItem.id}
-                      className="ui-motion-lift group rounded-2xl border border-[#e6dece] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#cfab8a] hover:shadow-md"
+                      className="ui-motion-lift group rounded-2xl border border-default bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#cfab8a] hover:shadow-md"
                     >
                       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e8577]">{role}</p>
                       <Link href={`/classes/${classItem.id}`} className="mt-2 block">
@@ -143,7 +143,7 @@ export default async function TeacherDashboardPage() {
                   );
                 })
               ) : (
-                <div className="rounded-2xl border border-dashed border-[#dfd5c4] bg-[#f7f2e8] p-6 text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-default bg-[#f7f2e8] p-6 text-sm text-slate-500">
                   No classes yet. Create one to get started.
                 </div>
               )}

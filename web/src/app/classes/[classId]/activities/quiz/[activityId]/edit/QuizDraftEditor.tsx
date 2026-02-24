@@ -118,7 +118,7 @@ export default function QuizDraftEditor({
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             disabled={isPublished}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-70"
           />
         </div>
 
@@ -132,7 +132,7 @@ export default function QuizDraftEditor({
             onChange={(event) => setInstructions(event.target.value)}
             rows={3}
             disabled={isPublished}
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-70"
+            className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-70"
           />
         </div>
 
@@ -140,7 +140,7 @@ export default function QuizDraftEditor({
           {questions.map((question, questionIndex) => (
             <section
               key={`question-${questionIndex}`}
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+              className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4"
             >
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-sm font-semibold text-slate-700">Question {questionIndex + 1}</p>
@@ -165,7 +165,7 @@ export default function QuizDraftEditor({
                   }
                   rows={2}
                   disabled={isPublished}
-                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="w-full rounded-xl border border-default bg-white px-3 py-2 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-70"
                 />
               </div>
 
@@ -181,7 +181,7 @@ export default function QuizDraftEditor({
                         updateChoice(questionIndex, choiceIndex, event.target.value)
                       }
                       disabled={isPublished}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-70"
+                      className="w-full rounded-xl border border-default bg-white px-3 py-2 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-70"
                     />
                   </div>
                 ))}
@@ -200,7 +200,7 @@ export default function QuizDraftEditor({
                       })
                     }
                     disabled={isPublished}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="w-full rounded-xl border border-default bg-white px-3 py-2 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     <option value="">Select a correct answer</option>
                     {question.choices.map((choice, choiceIndex) => (
@@ -224,7 +224,7 @@ export default function QuizDraftEditor({
                     }
                     rows={2}
                     disabled={isPublished}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="w-full rounded-xl border border-default bg-white px-3 py-2 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-70"
                   />
                 </div>
               </div>
@@ -244,13 +244,13 @@ export default function QuizDraftEditor({
             <PendingSubmitButton
               label="Save Draft"
               pendingLabel="Saving..."
-              className="rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+              className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
             />
           </div>
         ) : null}
       </form>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-4">
+      <div className="rounded-2xl border border-default bg-white p-4">
         <h2 className="text-lg font-semibold">Publish and Assign</h2>
         <p className="mt-2 text-sm text-slate-500">
           Publish to lock question content, then create a whole-class assignment.
@@ -278,13 +278,13 @@ export default function QuizDraftEditor({
             <input
               name="due_at"
               type="datetime-local"
-              className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="rounded-xl border border-default bg-white px-3 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
             />
             <PendingSubmitButton
               label="Create Assignment"
               pendingLabel="Creating..."
               disabled={!isPublished}
-              className="rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+              className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
             />
           </form>
         </div>

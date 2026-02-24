@@ -125,7 +125,7 @@ export default async function EditQuizDraftPage({
         </header>
 
         {createdMessage ? (
-          <div className="mb-4 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-4 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {createdMessage}
           </div>
         ) : null}

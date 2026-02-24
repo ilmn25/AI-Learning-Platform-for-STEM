@@ -85,7 +85,7 @@ export default function AssignmentChatPanel({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+      <div className="rounded-2xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
         <p className="font-medium">Assignment Instructions</p>
         <p className="mt-1">{instructions}</p>
       </div>
@@ -96,7 +96,7 @@ export default function AssignmentChatPanel({
         </div>
       ) : null}
 
-      <div className="max-h-104 space-y-3 overflow-y-auto rounded-3xl border border-slate-200 bg-slate-50 p-4">
+      <div className="max-h-104 space-y-3 overflow-y-auto rounded-3xl border border-default bg-[var(--surface-muted)] p-4">
         {transcript.length === 0 ? (
           <p className="text-sm text-slate-500">Start by asking your first assignment question.</p>
         ) : (
@@ -105,8 +105,8 @@ export default function AssignmentChatPanel({
               key={`${turn.role}-${turn.createdAt}-${index}`}
               className={`rounded-2xl border p-4 ${
                 turn.role === "student"
-                  ? "border-cyan-400/30 bg-cyan-400/10 text-cyan-700"
-                  : "border-slate-200 bg-white text-slate-900"
+                  ? "border-accent bg-accent-soft text-accent"
+                  : "border-default bg-white text-slate-900"
               }`}
             >
               <div className="mb-2 flex items-center justify-between text-xs uppercase tracking-[0.2em]">
@@ -141,7 +141,7 @@ export default function AssignmentChatPanel({
           rows={4}
           disabled={isSubmitted}
           placeholder="Continue the assignment conversation..."
-          className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-60"
         />
         <div className="flex items-center justify-between">
           <p className="text-xs text-slate-500">
@@ -150,7 +150,7 @@ export default function AssignmentChatPanel({
           <button
             type="submit"
             disabled={isPending || isSubmitted || !message.trim()}
-            className="rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:bg-cyan-400/40"
+            className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:bg-accent-soft"
           >
             {isPending ? "Thinking..." : "Send"}
           </button>
@@ -172,7 +172,7 @@ export default function AssignmentChatPanel({
             rows={4}
             disabled={isSubmitted}
             placeholder="What did you learn from this chat?"
-            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm disabled:cursor-not-allowed disabled:opacity-60"
           />
           <p className="text-xs text-slate-500">
             {reflection.length}/{MAX_REFLECTION_CHARS}

@@ -30,7 +30,7 @@ export default async function HomePage() {
       <div className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 pb-16 pt-10">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm font-semibold tracking-wide text-slate-700">
-            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-slate-900 text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#2f2b24] text-white">
               <BrandMark className="h-4 w-4" />
             </span>
             Learning Platform
@@ -40,7 +40,7 @@ export default async function HomePage() {
               {secondaryLabel}
             </Link>
             <Link
-              className="ui-motion-color rounded-full border border-slate-200 bg-white px-4 py-2 font-semibold text-slate-600 hover:border-[#d8c8b9] hover:text-[#8f4a35]"
+              className="ui-motion-color rounded-full border border-default bg-white px-4 py-2 font-semibold text-slate-600 hover:border-[#d8c8b9] hover:text-[#8f4a35]"
               href={primaryHref}
             >
               {primaryLabel}

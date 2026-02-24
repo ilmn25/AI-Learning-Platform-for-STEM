@@ -68,8 +68,64 @@ h3 {
   color: var(--text-subtle);
 }
 
+.text-ui-primary {
+  color: var(--foreground);
+}
+
+.text-ui-muted {
+  color: var(--text-muted);
+}
+
+.text-ui-subtle {
+  color: var(--text-subtle);
+}
+
 .border-default {
   border-color: var(--border-default);
+}
+
+.border-accent {
+  border-color: color-mix(in srgb, var(--accent-primary) 45%, #ffffff);
+}
+
+.hover\:border-accent:hover {
+  border-color: color-mix(in srgb, var(--accent-primary) 45%, #ffffff);
+}
+
+.bg-accent {
+  background: var(--accent-primary);
+}
+
+.bg-accent-soft {
+  background: var(--accent-soft);
+}
+
+.bg-accent-strong {
+  background: var(--accent-primary-strong);
+}
+
+.hover\:bg-accent-strong:hover {
+  background: var(--accent-primary-strong);
+}
+
+.hover\:bg-accent-soft:hover {
+  background: var(--accent-soft);
+}
+
+.disabled\:bg-accent-soft:disabled {
+  background: var(--accent-soft);
+}
+
+.text-accent {
+  color: #8b4631;
+}
+
+.text-accent-strong {
+  color: #7d412f;
+}
+
+.hover\:text-accent:hover {
+  color: #8b4631;
 }
 
 .sidebar-content {
@@ -145,6 +201,11 @@ h3 {
 }
 
 .input-shell:focus {
+  border-color: color-mix(in srgb, var(--accent-primary) 45%, #ffffff);
+  box-shadow: 0 0 0 3px rgba(192, 106, 79, 0.16);
+}
+
+.focus-ring-warm:focus {
   border-color: color-mix(in srgb, var(--accent-primary) 45%, #ffffff);
   box-shadow: 0 0 0 3px rgba(192, 106, 79, 0.16);
 }

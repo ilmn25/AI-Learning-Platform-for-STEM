@@ -89,7 +89,7 @@ export default async function NewChatAssignmentPage({
               name="title"
               required
               placeholder="Week 2 Guided Chat: Limits"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
             />
           </div>
 
@@ -103,7 +103,7 @@ export default async function NewChatAssignmentPage({
               required
               rows={5}
               placeholder="Ask at least three questions about formal limit definitions, then summarize what changed in your understanding."
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
             />
           </div>
 
@@ -115,14 +115,14 @@ export default async function NewChatAssignmentPage({
               id="due_at"
               name="due_at"
               type="datetime-local"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
             />
           </div>
 
           <PendingSubmitButton
             label="Create and Assign"
             pendingLabel="Creating assignment..."
-            className="rounded-xl bg-cyan-400/90 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+            className="rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
           />
         </form>
       </div>

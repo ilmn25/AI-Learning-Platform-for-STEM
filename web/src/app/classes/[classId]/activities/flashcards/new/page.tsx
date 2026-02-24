@@ -84,7 +84,7 @@ export default async function NewFlashcardsDraftPage({
               name="title"
               required
               placeholder="Week 3 Flashcards: Key Concepts"
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
             />
           </div>
 
@@ -98,7 +98,7 @@ export default async function NewFlashcardsDraftPage({
               required
               rows={4}
               placeholder="Focus on core definitions and key examples."
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
             />
           </div>
 
@@ -113,14 +113,14 @@ export default async function NewFlashcardsDraftPage({
               min={1}
               max={30}
               defaultValue={12}
-              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+              className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm text-slate-900 outline-none focus-ring-warm"
             />
           </div>
 
           <PendingSubmitButton
             label="Generate Draft"
             pendingLabel="Generating..."
-            className="rounded-xl bg-cyan-400/90 px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+            className="rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
           />
         </form>
       </div>

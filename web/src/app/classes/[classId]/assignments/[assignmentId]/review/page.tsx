@@ -362,7 +362,7 @@ export default async function AssignmentReviewPage({
         </header>
 
         {createdMessage ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-6 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {createdMessage}
           </div>
         ) : null}
@@ -378,7 +378,7 @@ export default async function AssignmentReviewPage({
         ) : null}
 
         {totalRecipients > 0 ? (
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-default bg-white px-4 py-3 text-sm text-slate-600">
             <p>
               Showing {rangeStart + 1}-
               {Math.min(rangeStart + (recipients?.length ?? 0), totalRecipients)} of{" "}
@@ -394,7 +394,7 @@ export default async function AssignmentReviewPage({
                     Previous
                   </Link>
                 ) : (
-                  <span className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-500">
+                  <span className="rounded-lg border border-default px-3 py-1.5 text-xs text-slate-500">
                     Previous
                   </span>
                 )}
@@ -409,7 +409,7 @@ export default async function AssignmentReviewPage({
                     Next
                   </Link>
                 ) : (
-                  <span className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-500">
+                  <span className="rounded-lg border border-default px-3 py-1.5 text-xs text-slate-500">
                     Next
                   </span>
                 )}
@@ -420,7 +420,7 @@ export default async function AssignmentReviewPage({
 
         <div className="space-y-6">
           {(recipients ?? []).length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+            <div className="rounded-3xl border border-dashed border-default bg-[var(--surface-muted)] p-6 text-sm text-slate-500">
               No students are currently assigned to this activity.
             </div>
           ) : (
@@ -443,14 +443,14 @@ export default async function AssignmentReviewPage({
               return (
                 <section
                   key={`${recipient.student_id}-${recipient.assigned_at}`}
-                  className="rounded-3xl border border-slate-200 bg-white p-6"
+                  className="rounded-3xl border border-default bg-white p-6"
                 >
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Student</p>
                       <p className="text-sm font-semibold text-slate-700">{recipient.student_id}</p>
                     </div>
-                    <span className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-600">
+                    <span className="rounded-full border border-default px-3 py-1 text-xs text-slate-600">
                       {recipient.status}
                     </span>
                   </div>
@@ -460,7 +460,7 @@ export default async function AssignmentReviewPage({
                       <p className="text-sm text-slate-500">No submission yet.</p>
                     ) : (
                       <div className="space-y-4">
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4">
                           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                             Transcript
                           </p>
@@ -473,7 +473,7 @@ export default async function AssignmentReviewPage({
                                 (turn, index) => (
                                   <div
                                     key={`${latestSubmission.id}-${turn.role}-${turn.createdAt}-${index}`}
-                                    className="rounded-xl border border-slate-200 bg-white p-3"
+                                    className="rounded-xl border border-default bg-white p-3"
                                   >
                                     <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                                       {turn.role === "student" ? "Student" : "AI Tutor"}
@@ -488,7 +488,7 @@ export default async function AssignmentReviewPage({
                           )}
                         </div>
 
-                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4">
                           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                             Reflection
                           </p>
@@ -500,7 +500,7 @@ export default async function AssignmentReviewPage({
 
                         <form
                           action={reviewChatSubmission.bind(null, classId, latestSubmission.id)}
-                          className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                          className="space-y-4 rounded-2xl border border-default bg-[var(--surface-muted)] p-4"
                         >
                           <input type="hidden" name="assignment_id" value={assignmentId} />
 
@@ -518,7 +518,7 @@ export default async function AssignmentReviewPage({
                               min={0}
                               max={100}
                               defaultValue={latestSubmission.score?.toString() ?? ""}
-                              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                              className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                             />
                           </div>
 
@@ -536,7 +536,7 @@ export default async function AssignmentReviewPage({
                               defaultValue={
                                 latestFeedbackBySubmission.get(latestSubmission.id)?.comment ?? ""
                               }
-                              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                              className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                             />
                           </div>
 
@@ -555,14 +555,14 @@ export default async function AssignmentReviewPage({
                                 latestFeedbackBySubmission.get(latestSubmission.id)?.highlights ??
                                 []
                               ).join("\n")}
-                              className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                              className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                             />
                           </div>
 
                           <PendingSubmitButton
                             label="Save Review"
                             pendingLabel="Saving..."
-                            className="rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+                            className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
                           />
                         </form>
                       </div>
@@ -571,7 +571,7 @@ export default async function AssignmentReviewPage({
                     <p className="text-sm text-slate-500">No submission yet.</p>
                   ) : activity.type === "quiz" ? (
                     <div className="space-y-4">
-                      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+                      <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4 text-sm text-slate-600">
                         <p>Attempts submitted: {attempts.length}</p>
                         <p>Best score: {bestScore === null ? "N/A" : `${bestScore}%`}</p>
                       </div>
@@ -583,7 +583,7 @@ export default async function AssignmentReviewPage({
                         return (
                           <div
                             key={attempt.id}
-                            className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                            className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4"
                           >
                             <p className="text-sm font-semibold text-slate-900">
                               Attempt {parsed.attemptNumber} · Score:{" "}
@@ -602,7 +602,7 @@ export default async function AssignmentReviewPage({
                                 return (
                                   <div
                                     key={`${attempt.id}-${answer.questionId}-${answerIndex}`}
-                                    className="rounded-xl border border-slate-200 bg-white p-3"
+                                    className="rounded-xl border border-default bg-white p-3"
                                   >
                                     <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                                       Question {answerIndex + 1}
@@ -630,7 +630,7 @@ export default async function AssignmentReviewPage({
 
                             <form
                               action={reviewQuizSubmission.bind(null, classId, attempt.id)}
-                              className="mt-4 space-y-4 rounded-2xl border border-slate-200 bg-white p-4"
+                              className="mt-4 space-y-4 rounded-2xl border border-default bg-white p-4"
                             >
                               <input type="hidden" name="assignment_id" value={assignmentId} />
 
@@ -648,7 +648,7 @@ export default async function AssignmentReviewPage({
                                   min={0}
                                   max={100}
                                   defaultValue={attempt.score?.toString() ?? ""}
-                                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                  className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                                 />
                               </div>
 
@@ -664,7 +664,7 @@ export default async function AssignmentReviewPage({
                                   name="comment"
                                   rows={3}
                                   defaultValue={feedback?.comment ?? ""}
-                                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                  className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                                 />
                               </div>
 
@@ -680,14 +680,14 @@ export default async function AssignmentReviewPage({
                                   name="highlights"
                                   rows={3}
                                   defaultValue={(feedback?.highlights ?? []).join("\n")}
-                                  className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                                  className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                                 />
                               </div>
 
                               <PendingSubmitButton
                                 label="Save Review"
                                 pendingLabel="Saving..."
-                                className="rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+                                className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
                               />
                             </form>
                           </div>
@@ -698,7 +698,7 @@ export default async function AssignmentReviewPage({
                     <p className="text-sm text-slate-500">No submission yet.</p>
                   ) : (
                     <div className="space-y-4">
-                      <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4">
                         <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
                           Session Summary
                         </p>
@@ -715,7 +715,7 @@ export default async function AssignmentReviewPage({
 
                       <form
                         action={reviewFlashcardsSubmission.bind(null, classId, latestSubmission.id)}
-                        className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                        className="space-y-4 rounded-2xl border border-default bg-[var(--surface-muted)] p-4"
                       >
                         <div className="space-y-2">
                           <label
@@ -731,7 +731,7 @@ export default async function AssignmentReviewPage({
                             min={0}
                             max={100}
                             defaultValue={latestSubmission.score?.toString() ?? ""}
-                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                            className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                           />
                         </div>
 
@@ -749,7 +749,7 @@ export default async function AssignmentReviewPage({
                             defaultValue={
                               latestFeedbackBySubmission.get(latestSubmission.id)?.comment ?? ""
                             }
-                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                            className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                           />
                         </div>
 
@@ -767,14 +767,14 @@ export default async function AssignmentReviewPage({
                             defaultValue={(
                               latestFeedbackBySubmission.get(latestSubmission.id)?.highlights ?? []
                             ).join("\n")}
-                            className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-900 outline-none focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+                            className="w-full rounded-xl border border-default bg-white px-4 py-2 text-sm text-slate-900 outline-none focus-ring-warm"
                           />
                         </div>
 
                         <PendingSubmitButton
                           label="Save Feedback"
                           pendingLabel="Saving..."
-                          className="rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-cyan-300 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+                          className="rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
                         />
                       </form>
                     </div>

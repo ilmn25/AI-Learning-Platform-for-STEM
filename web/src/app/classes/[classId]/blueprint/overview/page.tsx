@@ -127,12 +127,12 @@ export default async function BlueprintOverviewPage({
         </header>
 
         {approvedMessage ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-700">
+          <div className="mb-6 rounded-xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
             {approvedMessage}
           </div>
         ) : null}
 
-        <div className="rounded-3xl border border-slate-200 bg-white p-6">
+        <div className="rounded-3xl border border-default bg-white p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.25em] text-slate-500">
@@ -145,7 +145,7 @@ export default async function BlueprintOverviewPage({
                 <PendingSubmitButton
                   label="Publish blueprint"
                   pendingLabel="Publishing..."
-                  className="rounded-full bg-cyan-400/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 disabled:cursor-not-allowed disabled:bg-cyan-400/50"
+                  className="rounded-full bg-accent px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-950 disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </form>
             ) : (
@@ -156,8 +156,8 @@ export default async function BlueprintOverviewPage({
           </div>
         </div>
 
-        <section className="mt-10 rounded-4xl border border-slate-200 bg-white text-slate-900 shadow-2xl">
-          <div className="border-b border-slate-200 px-10 py-8">
+        <section className="mt-10 rounded-4xl border border-default bg-white text-slate-900 shadow-2xl">
+          <div className="border-b border-default px-10 py-8">
             <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Compiled Blueprint</p>
             <h2 className="mt-3 text-3xl font-semibold text-slate-900">{classRow.title}</h2>
             <p className="mt-2 text-sm text-slate-500">
@@ -165,7 +165,7 @@ export default async function BlueprintOverviewPage({
             </p>
           </div>
           <div className="px-10 py-8">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+            <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-6">
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
                 Summary
               </p>
@@ -177,7 +177,7 @@ export default async function BlueprintOverviewPage({
             <div className="mt-8 space-y-6">
               {topics && topics.length > 0 ? (
                 topics.map((topic) => (
-                  <div key={topic.id} className="rounded-2xl border border-slate-200 bg-white p-6">
+                  <div key={topic.id} className="rounded-2xl border border-default bg-white p-6">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div>
                         <h3 className="text-xl font-semibold text-slate-900">{topic.title}</h3>
@@ -187,7 +187,7 @@ export default async function BlueprintOverviewPage({
                           </p>
                         ) : null}
                       </div>
-                      <span className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-500">
+                      <span className="rounded-full border border-default px-3 py-1 text-xs text-slate-500">
                         Sequence {topic.sequence}
                       </span>
                     </div>
@@ -214,7 +214,7 @@ export default async function BlueprintOverviewPage({
                   </div>
                 ))
               ) : (
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-6 text-sm text-slate-500">
+                <div className="rounded-2xl border border-dashed border-default bg-[var(--surface-muted)] p-6 text-sm text-slate-500">
                   No topics found in this blueprint.
                 </div>
               )}
