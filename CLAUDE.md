@@ -26,6 +26,58 @@ Run a single test file:
 pnpm vitest run path/to/testfile.test.ts
 ```
 
+## Deployment Commands
+
+### Vercel (Frontend/App)
+
+```bash
+cd web/
+
+# Check Vercel version
+npx vercel --version
+
+# Check logged-in user
+npx vercel whoami
+
+# Deploy to production
+npx --yes vercel --yes --prod
+
+# Deploy to preview (staging)
+npx vercel
+
+# View deployment logs
+npx vercel logs ai-stem-learning-platform-group-8
+
+# Inspect a deployment
+npx vercel inspect <deployment-url>
+```
+
+### Supabase (Database/Backend)
+
+```bash
+# Link to Supabase project
+supabase link --project-ref <project-ref>
+
+# Apply migrations
+supabase db push
+
+# Create new migration
+supabase migration new migration_name
+
+# Start local Supabase instance
+supabase start
+
+# View Supabase logs
+supabase functions logs <function-name>
+```
+
+Apply migrations via MCP (if configured):
+
+```bash
+# Use the supabase MCP tool to execute SQL
+mcp__supabase__execute_sql --sql "SELECT 1"
+```
+
 ## Architecture
 
 **Monorepo Structure**:
