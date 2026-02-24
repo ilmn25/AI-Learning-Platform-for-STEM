@@ -27,7 +27,7 @@ function getNavClass(isActive: boolean) {
   if (isActive) {
     return `${base} chip-warm`;
   }
-  return `${base} chip-neutral hover:border-[#d5cab6] hover:bg-[#f9f4ea] hover:text-[#7d412f]`;
+  return `${base} chip-neutral hover:border-accent hover:bg-accent-soft hover:text-accent`;
 }
 
 export default function AuthHeader({
@@ -53,17 +53,17 @@ export default function AuthHeader({
   const showTeacherNav = resolvedAccountType === "teacher" || classContext?.isTeacher;
   const shellClass =
     tone === "subtle"
-      ? "sticky top-0 z-40 border-b border-[#e7e0d2] bg-[#f7f3ea]/95 backdrop-blur"
-      : "sticky top-0 z-40 border-b border-[#e7e0d2] bg-[#fffdf8]/95 backdrop-blur";
+      ? "sticky top-0 z-40 border-b border-default bg-[var(--surface-muted)]/95 backdrop-blur"
+      : "sticky top-0 z-40 border-b border-default bg-white/95 backdrop-blur";
 
   return (
     <div className={shellClass}>
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-5">
         <Link
           href={dashboardHref}
-          className="ui-motion-color flex items-center gap-2 text-sm font-semibold tracking-wide text-ui-subtle hover:text-[#7d412f]"
+          className="ui-motion-color flex items-center gap-2 text-sm font-semibold tracking-wide text-ui-subtle hover:text-accent"
         >
-          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[#1d1d1b] text-[#f8f2ea]">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--foreground)] text-white">
             <BrandMark className="h-4 w-4" />
           </span>
           Learning Platform
@@ -101,14 +101,14 @@ export default function AuthHeader({
                     ? `/classes/${classContext.classId}#teacher-chat-monitor`
                     : `/classes/${classContext.classId}?view=chat`
                 }
-                className="ui-motion-color rounded-full border border-[#ddd4c4] bg-white px-4 py-2 text-xs font-semibold text-ui-muted hover:border-[#d2b08f] hover:text-[#874935]"
+                className="ui-motion-color rounded-full border border-default bg-white px-4 py-2 text-xs font-semibold text-ui-muted hover:border-accent hover:text-accent"
               >
                 {classContext.isTeacher ? "Chat Monitor" : "Open AI Chat"}
               </Link>
               {classContext.isTeacher ? (
                 <Link
                   href={`/classes/${classContext.classId}/activities/chat/new`}
-                  className="ui-motion-color chip-warm rounded-full px-4 py-2 text-xs font-semibold hover:bg-[#fae7df]"
+                  className="ui-motion-color chip-warm rounded-full px-4 py-2 text-xs font-semibold hover:bg-accent-soft"
                 >
                   New Chat Assignment
                 </Link>
@@ -118,7 +118,7 @@ export default function AuthHeader({
           <form action={signOut}>
             <button
               type="submit"
-              className="ui-motion-color rounded-full border border-[#ddd4c4] bg-white px-4 py-2 text-xs font-semibold text-ui-muted hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
+              className="ui-motion-color rounded-full border border-default bg-white px-4 py-2 text-xs font-semibold text-ui-muted hover:border-rose-300 hover:bg-rose-50 hover:text-rose-700"
             >
               Sign Out
             </button>
@@ -133,7 +133,7 @@ export default function AuthHeader({
               if (crumb.href && !isLast) {
                 return (
                   <span key={`${crumb.label}-${index}`} className="flex items-center gap-2">
-                    <Link href={crumb.href} className="ui-motion-color hover:text-[#81412d]">
+                    <Link href={crumb.href} className="ui-motion-color hover:text-accent">
                       {crumb.label}
                     </Link>
                     <span className="text-ui-subtle">/</span>

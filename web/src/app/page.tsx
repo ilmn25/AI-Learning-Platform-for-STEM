@@ -30,17 +30,17 @@ export default async function HomePage() {
       <div className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-12 px-6 pb-16 pt-10">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm font-semibold tracking-wide text-ui-subtle">
-            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#2f2b24] text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--foreground)] text-white">
               <BrandMark className="h-4 w-4" />
             </span>
             Learning Platform
           </div>
           <div className="flex items-center gap-3 text-sm">
-            <Link className="ui-motion-color text-ui-muted hover:text-[#8f4a35]" href={secondaryHref}>
+            <Link className="ui-motion-color text-ui-muted hover:text-accent" href={secondaryHref}>
               {secondaryLabel}
             </Link>
             <Link
-              className="ui-motion-color rounded-full border border-default bg-white px-4 py-2 font-semibold text-ui-muted hover:border-[#d8c8b9] hover:text-[#8f4a35]"
+              className="ui-motion-color rounded-full border border-default bg-white px-4 py-2 font-semibold text-ui-muted hover:border-accent hover:text-accent"
               href={primaryHref}
             >
               {primaryLabel}
@@ -48,10 +48,10 @@ export default async function HomePage() {
           </div>
         </header>
 
-        <main className="hero-shell grid gap-8 rounded-[2rem] border border-[#e6dfd2] px-7 pb-10 pt-10 shadow-sm lg:grid-cols-[minmax(0,1.08fr),minmax(0,0.92fr)] lg:px-10">
+        <main className="hero-shell grid gap-8 rounded-[2rem] border border-default px-7 pb-10 pt-10 shadow-sm lg:grid-cols-[minmax(0,1.08fr),minmax(0,0.92fr)] lg:px-10">
           <div className="space-y-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#e4d3c6] bg-[#fff7f2] px-4 py-2 text-xs font-semibold tracking-wide text-[#8f4a35]">
-              <span className="h-2 w-2 rounded-full bg-[#c96e53]" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-default bg-accent-soft px-4 py-2 text-xs font-semibold tracking-wide text-accent">
+              <span className="h-2 w-2 rounded-full bg-accent" />
               Trustworthy AI for real classrooms
             </div>
             <div className="space-y-5">
@@ -121,7 +121,7 @@ export default async function HomePage() {
                   "Clear learning progression from materials to practice.",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
-                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#c96e53]" />
+                    <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent" />
                     <span>{item}</span>
                   </li>
                 ))}

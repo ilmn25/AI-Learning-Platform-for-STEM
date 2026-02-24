@@ -180,7 +180,7 @@ export default async function StudentDashboardPage() {
         <main className="mx-auto max-w-5xl p-6 pt-16">
           <header className="flex flex-wrap items-center justify-between gap-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e8577]">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ui-subtle">
                 Student Dashboard
               </p>
               <h1 className="editorial-title mt-2 text-4xl text-ui-primary">Welcome, {displayName}</h1>
@@ -197,9 +197,9 @@ export default async function StudentDashboardPage() {
             <section className="mt-8">
               <h2 className="text-lg font-semibold text-ui-primary">Your Progress</h2>
               <div className="mt-4 grid grid-cols-3 gap-4">
-                <div className="rounded-2xl border border-[#e3c6b8] bg-[#fdf1eb] p-4">
+                <div className="rounded-2xl border border-default bg-accent-soft p-4">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f6ddcf] text-[#9a513b]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft text-accent">
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path
                           strokeLinecap="round"
@@ -208,13 +208,13 @@ export default async function StudentDashboardPage() {
                         />
                       </svg>
                     </div>
-                    <span className="text-2xl font-bold text-[#954d37]">{current.length}</span>
+                    <span className="text-2xl font-bold text-accent">{current.length}</span>
                   </div>
-                  <p className="mt-2 text-sm font-medium text-[#914933]">Due Now</p>
+                  <p className="mt-2 text-sm font-medium text-accent">Due Now</p>
                 </div>
-                <div className="rounded-2xl border border-[#ddd6c8] bg-[#f7f3ea] p-4">
+                <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#ece6d9] text-[#6b6458]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--surface-muted)] text-ui-muted">
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path
                           strokeLinecap="round"
@@ -223,13 +223,13 @@ export default async function StudentDashboardPage() {
                         />
                       </svg>
                     </div>
-                    <span className="text-2xl font-bold text-[#5f5a4f]">{upcoming.length}</span>
+                    <span className="text-2xl font-bold text-ui-primary">{upcoming.length}</span>
                   </div>
-                  <p className="mt-2 text-sm font-medium text-[#646055]">Upcoming</p>
+                  <p className="mt-2 text-sm font-medium text-ui-muted">Upcoming</p>
                 </div>
-                <div className="rounded-2xl border border-[#d8d7cb] bg-[#f8f8f3] p-4">
+                <div className="rounded-2xl border border-default bg-[var(--surface-muted)] p-4">
                   <div className="flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e8e7de] text-[#5f6354]">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--surface-muted)] text-ui-muted">
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path
                           strokeLinecap="round"
@@ -238,15 +238,15 @@ export default async function StudentDashboardPage() {
                         />
                       </svg>
                     </div>
-                    <span className="text-2xl font-bold text-[#545948]">{completed.length}</span>
+                    <span className="text-2xl font-bold text-ui-primary">{completed.length}</span>
                   </div>
-                  <p className="mt-2 text-sm font-medium text-[#5a5f4d]">Completed</p>
+                  <p className="mt-2 text-sm font-medium text-ui-muted">Completed</p>
                 </div>
               </div>
 
               {current.length > 0 && (
                 <div className="mt-6">
-                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#95503a]">
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-accent">
                     Due Now
                   </h3>
                   <div className="space-y-2">
@@ -254,10 +254,10 @@ export default async function StudentDashboardPage() {
                       <Link
                         key={assignment.id}
                         href={`/classes/${assignment.classId}/assignments/${assignment.id}/${assignment.activityType}`}
-                        className="ui-motion-lift flex items-center justify-between rounded-xl border border-default bg-white p-3 shadow-sm hover:border-[#ccac8c] hover:shadow-md"
+                        className="ui-motion-lift flex items-center justify-between rounded-xl border border-default bg-white p-3 shadow-sm hover:border-accent hover:shadow-md"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f9ebe3] text-[#99513b]">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-soft text-accent">
                             {getActivityIcon(assignment.activityType)}
                           </div>
                           <div>
@@ -266,11 +266,7 @@ export default async function StudentDashboardPage() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p
-                            className={`text-xs font-medium ${
-                              assignment.status === "in_progress" ? "text-[#956745]" : "text-[#95503a]"
-                            }`}
-                          >
+                          <p className="text-xs font-medium text-accent">
                             {assignment.status === "in_progress"
                               ? "In Progress"
                               : formatDueDate(assignment.dueAt)}
@@ -284,7 +280,7 @@ export default async function StudentDashboardPage() {
 
               {upcoming.length > 0 && (
                 <div className="mt-6">
-                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#656055]">
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-ui-muted">
                     Upcoming
                   </h3>
                   <div className="space-y-2">
@@ -292,10 +288,10 @@ export default async function StudentDashboardPage() {
                       <Link
                         key={assignment.id}
                         href={`/classes/${assignment.classId}/assignments/${assignment.id}/${assignment.activityType}`}
-                        className="ui-motion-lift flex items-center justify-between rounded-xl border border-[#e4ddcf] bg-white p-3 shadow-sm hover:border-[#d0c5b2] hover:shadow-md"
+                        className="ui-motion-lift flex items-center justify-between rounded-xl border border-default bg-white p-3 shadow-sm hover:border-accent hover:shadow-md"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#f2eee5] text-[#686154]">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--surface-muted)] text-ui-muted">
                             {getActivityIcon(assignment.activityType)}
                           </div>
                           <div>
@@ -303,7 +299,7 @@ export default async function StudentDashboardPage() {
                             <p className="text-xs text-ui-muted">{assignment.classTitle}</p>
                           </div>
                         </div>
-                        <p className="text-xs font-medium text-[#6a6458]">{formatDueDate(assignment.dueAt)}</p>
+                        <p className="text-xs font-medium text-ui-muted">{formatDueDate(assignment.dueAt)}</p>
                       </Link>
                     ))}
                   </div>
@@ -325,9 +321,9 @@ export default async function StudentDashboardPage() {
                   return (
                     <div
                       key={classItem.id}
-                      className="ui-motion-lift group rounded-2xl border border-default bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#cfab8a] hover:shadow-md"
+                      className="ui-motion-lift group rounded-2xl border border-default bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent hover:shadow-md"
                     >
-                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e8577]">Student</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ui-subtle">Student</p>
                       <Link href={`/classes/${classItem.id}`} className="mt-2 block">
                         <h3 className="text-xl font-semibold text-ui-primary">{classItem.title}</h3>
                       </Link>
@@ -337,13 +333,13 @@ export default async function StudentDashboardPage() {
                       <div className="mt-4 flex flex-wrap gap-2">
                         <Link
                           href={`/classes/${classItem.id}`}
-                          className="ui-motion-color rounded-full border border-[#ddd3c2] bg-white px-3 py-1 text-xs font-medium text-ui-muted hover:border-[#c8a786] hover:bg-[#f9f3e8] hover:text-[#844633]"
+                          className="ui-motion-color rounded-full border border-default bg-white px-3 py-1 text-xs font-medium text-ui-muted hover:border-accent hover:bg-accent-soft hover:text-accent"
                         >
                           Open class
                         </Link>
                         <Link
                           href={`/classes/${classItem.id}?view=chat`}
-                          className="ui-motion-color rounded-full border border-[#ddd3c2] bg-white px-3 py-1 text-xs font-medium text-ui-muted hover:border-[#c8a786] hover:bg-[#f9f3e8] hover:text-[#844633]"
+                          className="ui-motion-color rounded-full border border-default bg-white px-3 py-1 text-xs font-medium text-ui-muted hover:border-accent hover:bg-accent-soft hover:text-accent"
                         >
                           Open AI chat
                         </Link>
@@ -352,7 +348,7 @@ export default async function StudentDashboardPage() {
                   );
                 })
               ) : (
-                <div className="rounded-2xl border border-dashed border-default bg-[#f7f2e8] p-6 text-sm text-ui-muted">
+                <div className="rounded-2xl border border-dashed border-default bg-[var(--surface-muted)] p-6 text-sm text-ui-muted">
                   No classes joined yet. Use a join code from your teacher.
                 </div>
               )}

@@ -732,7 +732,7 @@ export function BlueprintEditor({
             <button
               type="button"
               onClick={handleRestoreLocalDraft}
-              className="rounded-full bg-accent-strong px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#fff8f3]"
+              className="rounded-full bg-accent-strong px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/95"
             >
               Restore
             </button>

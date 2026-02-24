@@ -109,7 +109,7 @@ export default async function WelcomePage({
       <div className="mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-6 py-16">
         <div className="w-full text-center">
           <div className="mb-8 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#2f2b24] text-white shadow-lg">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--foreground)] text-white shadow-lg">
               <BrandMark className="h-9 w-9" />
             </div>
           </div>
@@ -146,7 +146,7 @@ export default async function WelcomePage({
         <div className="mt-12 flex flex-col items-center gap-4">
           <Link
             href={dashboardHref}
-            className="rounded-xl bg-[#2f2b24] px-8 py-3 text-base font-semibold text-white hover:bg-[#3a352d]"
+            className="rounded-xl bg-[var(--foreground)] px-8 py-3 text-base font-semibold text-white hover:opacity-90"
           >
             Go to Dashboard
           </Link>

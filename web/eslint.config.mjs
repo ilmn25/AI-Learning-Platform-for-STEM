@@ -30,6 +30,18 @@ const eslintConfig = defineConfig([
           selector: "TemplateElement[value.raw=/border-\\[#(?:e6dece|e5d2c4|ddd2c2|dfd5c4)\\]/]",
           message: "Use `border-default` (token) instead of hardcoded warm border hex values.",
         },
+        {
+          selector:
+            "Literal[value=/#(?:d8cdbb|c8a786|e5dece|e7dece|e7e0d2|ddd3c2|ddd4c4|d9cfbe|d8c8b9|d8d7cb|ddd6c8|e3c6b8|e4ddcf|d0c5b2|cfab8a|ccac8c|d7b79a|d3b092|cb9f82|cfad94|884a35|874934|8a4934|8c4b35|8f4934|8f4a35|844633|fdf1eb|fbe7dd|fbefe6|fbefe7|f9f3e8|f7f2e8|fff7f2|fdfbf7)/i]",
+          message:
+            "Use warm design token utilities (`border-default`, `border-accent`, `bg-accent-soft`, `text-accent`, `hover:*`) instead of hardcoded warm hex colors.",
+        },
+        {
+          selector:
+            "TemplateElement[value.raw=/#(?:d8cdbb|c8a786|e5dece|e7dece|e7e0d2|ddd3c2|ddd4c4|d9cfbe|d8c8b9|d8d7cb|ddd6c8|e3c6b8|e4ddcf|d0c5b2|cfab8a|ccac8c|d7b79a|d3b092|cb9f82|cfad94|884a35|874934|8a4934|8c4b35|8f4934|8f4a35|844633|fdf1eb|fbe7dd|fbefe6|fbefe7|f9f3e8|f7f2e8|fff7f2|fdfbf7)/i]",
+          message:
+            "Use warm design token utilities (`border-default`, `border-accent`, `bg-accent-soft`, `text-accent`, `hover:*`) instead of hardcoded warm hex colors.",
+        },
       ],
     },
   },

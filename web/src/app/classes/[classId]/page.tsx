@@ -311,8 +311,8 @@ export default async function ClassOverviewPage({
         breadcrumbs={[{ label: "Dashboard", href: "/teacher/dashboard" }, { label: classRow.title }]}
       />
       <div className="mx-auto w-full max-w-5xl px-6 py-16">
-        <header className="mb-10 rounded-[2rem] border border-[#e7dece] bg-white px-7 py-7 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e8577]">Class Overview</p>
+        <header className="mb-10 rounded-[2rem] border border-default bg-white px-7 py-7 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ui-subtle">Class Overview</p>
           <h1 className="editorial-title mt-2 text-4xl text-ui-primary">{classRow.title}</h1>
           <p className="mt-2 text-sm text-ui-muted">
             {classRow.subject || "General"} · {classRow.level || "Mixed level"}
@@ -333,7 +333,7 @@ export default async function ClassOverviewPage({
 
         <section className="mb-8 grid gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border border-default bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ui-subtle">
               Blueprint
             </p>
             <p className="mt-2 text-sm font-semibold text-ui-primary">
@@ -341,13 +341,13 @@ export default async function ClassOverviewPage({
             </p>
           </div>
           <div className="rounded-2xl border border-default bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ui-subtle">
               Assignments
             </p>
             <p className="mt-2 text-sm font-semibold text-ui-primary">{totalAssignments} recent assignments</p>
           </div>
           <div className="rounded-2xl border border-default bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ui-subtle">
               Materials
             </p>
             <p className="mt-2 text-sm font-semibold text-ui-primary">
@@ -376,12 +376,12 @@ export default async function ClassOverviewPage({
             ) : publishedBlueprint ? (
               <Link
                 href={`/classes/${classRow.id}/blueprint/published`}
-                className="ui-motion-lift mt-6 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-sm font-semibold text-[#874934] hover:-translate-y-0.5 hover:bg-[#fbefe7]"
+                className="ui-motion-lift mt-6 inline-flex rounded-xl border border-accent px-4 py-2 text-sm font-semibold text-accent hover:-translate-y-0.5 hover:bg-accent-soft"
               >
                 View published blueprint
               </Link>
             ) : (
-              <span className="mt-6 inline-flex rounded-xl border border-[#ddd3c2] px-4 py-2 text-sm text-ui-muted">
+              <span className="mt-6 inline-flex rounded-xl border border-default px-4 py-2 text-sm text-ui-muted">
                 Awaiting publication
               </span>
             )}
@@ -389,7 +389,7 @@ export default async function ClassOverviewPage({
           <div className="rounded-3xl border border-default bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Enrollment</h2>
             {isTeacher ? (
-              <div className="mt-3 rounded-2xl border border-[#d3b092] bg-[#fdf1eb] px-4 py-3 text-sm text-[#8c4b35]">
+              <div className="mt-3 rounded-2xl border border-accent bg-accent-soft px-4 py-3 text-sm text-accent">
                 Join code: <span className="font-semibold">{classRow.join_code}</span>
               </div>
             ) : (
@@ -414,7 +414,7 @@ export default async function ClassOverviewPage({
             <div className="flex flex-wrap gap-2">
               <Link
                 href="#teacher-chat-monitor"
-                className="ui-motion-color rounded-xl border border-[#ddd3c2] px-4 py-2 text-xs font-semibold text-ui-muted hover:border-[#c8a786] hover:bg-[#f9f3e8] hover:text-[#844633]"
+                className="ui-motion-color rounded-xl border border-default px-4 py-2 text-xs font-semibold text-ui-muted hover:border-accent hover:bg-accent-soft hover:text-accent"
               >
                 Open chat monitor
               </Link>
@@ -443,7 +443,7 @@ export default async function ClassOverviewPage({
                   </div>
                   <Link
                     href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                    className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                    className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                   >
                     Review
                   </Link>
@@ -504,7 +504,7 @@ export default async function ClassOverviewPage({
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Review
                     </Link>
@@ -536,7 +536,7 @@ export default async function ClassOverviewPage({
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/quiz`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Open
                     </Link>
@@ -588,7 +588,7 @@ export default async function ClassOverviewPage({
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Review
                     </Link>
@@ -620,7 +620,7 @@ export default async function ClassOverviewPage({
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/flashcards`}
-                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                      className="ui-motion-color rounded-lg border border-accent px-3 py-1.5 text-xs font-semibold text-accent hover:bg-accent-soft"
                     >
                       Open
                     </Link>
@@ -664,7 +664,7 @@ export default async function ClassOverviewPage({
                           <span
                             className={`rounded-full border px-3 py-1 text-xs ${
                               material.status === "processing"
-                                ? "border-[#d3b092] bg-[#fdf1eb] text-[#8a4934]"
+                                ? "border-accent bg-accent-soft text-accent"
                                 : material.status === "failed"
                                   ? "border-rose-500/40 bg-rose-500/10 text-rose-700"
                                   : "border-default text-ui-muted"
@@ -677,7 +677,7 @@ export default async function ClassOverviewPage({
                                 : material.status || "Pending"}
                           </span>
                           {material.status === "processing" ? (
-                            <span className="h-2 w-2 animate-pulse rounded-full bg-[#cb9f82]" />
+                            <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
                           ) : null}
                         </div>
                       </div>
@@ -697,13 +697,13 @@ export default async function ClassOverviewPage({
                       ) : null}
                       {material.status === "processing" ? (
                         <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-[var(--border-default)]">
-                          <div className="h-full w-2/3 animate-pulse rounded-full bg-[#cfad94]" />
+                          <div className="h-full w-2/3 animate-pulse rounded-full bg-accent" />
                         </div>
                       ) : null}
                     </div>
                   ))
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-default bg-[#f7f2e8] p-4 text-sm text-ui-muted">
+                  <div className="rounded-2xl border border-dashed border-default bg-[var(--surface-muted)] p-4 text-sm text-ui-muted">
                     No materials yet. Upload materials to begin blueprint generation.
                   </div>
                 )}
@@ -719,7 +719,7 @@ export default async function ClassOverviewPage({
               </p>
               <Link
                 href={`/classes/${classRow.id}/chat`}
-                className="ui-motion-color mt-4 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                className="ui-motion-color mt-4 inline-flex rounded-xl border border-accent px-4 py-2 text-xs font-semibold text-accent hover:bg-accent-soft"
               >
                 Open practice chat
               </Link>
@@ -733,7 +733,7 @@ export default async function ClassOverviewPage({
                   </p>
                   <Link
                     href={`/classes/${classRow.id}/blueprint/published`}
-                    className="ui-motion-color mt-4 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
+                    className="ui-motion-color mt-4 inline-flex rounded-xl border border-accent px-4 py-2 text-xs font-semibold text-accent hover:bg-accent-soft"
                   >
                     View published blueprint
                   </Link>
