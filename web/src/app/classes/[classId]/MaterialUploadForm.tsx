@@ -16,7 +16,7 @@ function SubmitButton({ fileCount }: { fileCount: number }) {
     <button
       type="submit"
       disabled={pending || fileCount === 0}
-      className="w-full rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+      className="btn-primary w-full rounded-xl px-4 py-2 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50"
     >
       {pending ? "Uploading..." : `Upload ${fileCount > 1 ? `${fileCount} files` : "material"}`}
     </button>

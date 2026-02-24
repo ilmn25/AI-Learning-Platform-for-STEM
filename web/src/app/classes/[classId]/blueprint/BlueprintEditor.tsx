@@ -264,7 +264,7 @@ function StartDraftButton() {
       type="submit"
       disabled={pending}
       aria-busy={pending}
-      className="rounded-full border border-cyan-400/40 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-200 disabled:cursor-not-allowed disabled:opacity-60"
+      className="rounded-full border border-cyan-300 bg-cyan-50 px-4 py-2 text-xs uppercase tracking-[0.2em] text-cyan-700 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? "Starting..." : "Start new draft"}
     </button>
@@ -940,7 +940,7 @@ export function BlueprintEditor({
                         <button
                           type="button"
                           onClick={() => handleAddObjective(topic.clientId)}
-                          className="text-xs uppercase tracking-[0.2em] text-cyan-200"
+                          className="text-xs uppercase tracking-[0.2em] text-cyan-700"
                         >
                           Add objective
                         </button>

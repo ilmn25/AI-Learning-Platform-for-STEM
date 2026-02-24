@@ -105,7 +105,7 @@ export default function FlashcardsAssignmentPanel({
                 }
                 className={`rounded-xl border px-3 py-1.5 text-xs font-semibold ${
                   cardStatus[card.id] === "known"
-                    ? "border-emerald-400/40 bg-emerald-400/15 text-emerald-200"
+                    ? "border-emerald-300 bg-emerald-50 text-emerald-700"
                     : "border-slate-200 text-slate-700 hover:border-cyan-300 hover:bg-cyan-50"
                 }`}
               >
@@ -119,7 +119,7 @@ export default function FlashcardsAssignmentPanel({
                 }
                 className={`rounded-xl border px-3 py-1.5 text-xs font-semibold ${
                   cardStatus[card.id] === "review"
-                    ? "border-cyan-400/40 bg-cyan-400/15 text-cyan-200"
+                    ? "border-cyan-300 bg-cyan-50 text-cyan-700"
                     : "border-slate-200 text-slate-700 hover:border-cyan-300 hover:bg-cyan-50"
                 }`}
               >

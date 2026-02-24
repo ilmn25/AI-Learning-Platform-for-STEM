@@ -3,12 +3,16 @@ import { requireVerifiedUser } from "@/lib/auth/session";
 import { getHelpContent } from "@/lib/content/help";
 
 export default async function HelpPage() {
-  const { accountType, user } = await requireVerifiedUser();
+  const { accountType, user, profile } = await requireVerifiedUser();
   const content = getHelpContent(accountType);
 
   return (
     <div className="surface-page min-h-screen">
-      <Sidebar accountType={accountType} userEmail={user.email ?? undefined} />
+      <Sidebar
+        accountType={accountType}
+        userEmail={user.email ?? undefined}
+        userDisplayName={profile.display_name}
+      />
       <div className="sidebar-content">
         <main className="mx-auto max-w-5xl p-6 pt-16">
           <header className="mb-8 space-y-2">
@@ -51,8 +55,8 @@ export default async function HelpPage() {
               <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
                 <h2 className="text-lg font-semibold text-slate-900">Support Scope</h2>
                 <p className="mt-2 text-sm text-slate-600">
-                  Account profile and role details are available in Settings. Password and advanced
-                  authentication flows are managed by your sign-in provider.
+                  Account profile rename and password change are available in Settings. For
+                  organization-level actions such as account removal, contact your administrator.
                 </p>
               </div>
             </div>

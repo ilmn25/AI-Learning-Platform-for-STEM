@@ -115,7 +115,7 @@ export default async function BlueprintOverviewPage({
             <p className="text-sm font-medium text-slate-500">Blueprint Overview</p>
             <h1 className="text-3xl font-semibold">{classRow.title}</h1>
             <p className="text-sm text-slate-500">
-              {classRow.subject || "STEM"} · {classRow.level || "Mixed level"}
+              {classRow.subject || "General"} · {classRow.level || "Mixed level"}
             </p>
           </div>
           <Link
@@ -149,7 +149,7 @@ export default async function BlueprintOverviewPage({
                 />
               </form>
             ) : (
-              <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-200">
+              <span className="rounded-full border border-emerald-300 bg-emerald-50 px-4 py-2 text-xs uppercase tracking-[0.2em] text-emerald-700">
                 Published
               </span>
             )}
@@ -161,7 +161,7 @@ export default async function BlueprintOverviewPage({
             <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Compiled Blueprint</p>
             <h2 className="mt-3 text-3xl font-semibold text-slate-900">{classRow.title}</h2>
             <p className="mt-2 text-sm text-slate-500">
-              {classRow.subject || "STEM"} · {classRow.level || "Mixed level"}
+              {classRow.subject || "General"} · {classRow.level || "Mixed level"}
             </p>
           </div>
           <div className="px-10 py-8">

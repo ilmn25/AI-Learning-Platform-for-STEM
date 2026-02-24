@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { uploadMaterial } from "@/app/classes/actions";
 import MaterialUploadForm from "./MaterialUploadForm";
 import AuthHeader from "@/app/components/AuthHeader";
 import StudentClassExperience from "@/app/classes/[classId]/StudentClassExperience";
 import TeacherChatMonitorPanel from "@/app/classes/[classId]/chat/TeacherChatMonitorPanel";
+import { startServerTimer } from "@/lib/perf";
+import { requireVerifiedUser } from "@/lib/auth/session";
 
 type SearchParams = {
   error?: string;
@@ -49,16 +50,10 @@ export default async function ClassOverviewPage({
   params: Promise<{ classId: string }>;
   searchParams?: Promise<SearchParams>;
 }) {
+  const timer = startServerTimer("class-overview");
   const { classId } = await params;
   const resolvedSearchParams = await searchParams;
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  const { supabase, user } = await requireVerifiedUser();
 
   const [classResult, enrollmentResult] = await Promise.all([
     supabase
@@ -275,6 +270,12 @@ export default async function ClassOverviewPage({
         : null;
 
   if (!isTeacher) {
+    timer.end({
+      role: "student",
+      chatAssignments: studentChatAssignments.length,
+      quizAssignments: studentQuizAssignments.length,
+      flashcardsAssignments: studentFlashcardsAssignments.length,
+    });
     return (
       <StudentClassExperience
         classId={classRow.id}
@@ -292,6 +293,16 @@ export default async function ClassOverviewPage({
     );
   }
 
+  const totalAssignments =
+    teacherChatAssignments.length + teacherQuizAssignments.length + teacherFlashcardsAssignments.length;
+
+  timer.end({
+    role: "teacher",
+    publishedBlueprint: Boolean(publishedBlueprint),
+    assignments: totalAssignments,
+    materials: materials?.length ?? 0,
+  });
+
   return (
     <div className="min-h-screen surface-page text-slate-900">
       <AuthHeader
@@ -304,7 +315,7 @@ export default async function ClassOverviewPage({
           <p className="text-sm font-medium text-slate-500">Class Overview</p>
           <h1 className="text-3xl font-semibold">{classRow.title}</h1>
           <p className="text-sm text-slate-500">
-            {classRow.subject || "STEM"} · {classRow.level || "Mixed level"}
+            {classRow.subject || "General"} · {classRow.level || "Mixed level"}
           </p>
         </header>
 
@@ -320,8 +331,33 @@ export default async function ClassOverviewPage({
           </div>
         ) : null}
 
+        <section className="mb-8 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Blueprint
+            </p>
+            <p className="mt-2 text-sm font-semibold text-slate-900">
+              {publishedBlueprint ? "Published and active" : "Draft / pending publication"}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Assignments
+            </p>
+            <p className="mt-2 text-sm font-semibold text-slate-900">{totalAssignments} recent assignments</p>
+          </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+              Materials
+            </p>
+            <p className="mt-2 text-sm font-semibold text-slate-900">
+              {materials?.length ?? 0} item{(materials?.length ?? 0) === 1 ? "" : "s"}
+            </p>
+          </div>
+        </section>
+
         <section className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Course blueprint</h2>
             <p className="mt-2 text-sm text-slate-600">
               {isTeacher
@@ -350,7 +386,7 @@ export default async function ClassOverviewPage({
               </span>
             )}
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Enrollment</h2>
             {isTeacher ? (
               <div className="mt-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-600">
@@ -365,7 +401,7 @@ export default async function ClassOverviewPage({
           </div>
         </section>
 
-        <section className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+        <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">AI Chat</h2>
@@ -431,7 +467,7 @@ export default async function ClassOverviewPage({
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+        <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Quizzes</h2>
@@ -515,7 +551,7 @@ export default async function ClassOverviewPage({
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+        <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Flashcards</h2>
@@ -601,14 +637,14 @@ export default async function ClassOverviewPage({
 
         {isTeacher ? (
           <section className="mt-10 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 lg:col-span-1">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-1">
               <h2 className="text-lg font-semibold">Upload materials</h2>
               <p className="mt-2 text-sm text-slate-600">
                 Supported formats: PDF, DOCX, PPTX.
               </p>
               <MaterialUploadForm action={uploadMaterial.bind(null, classRow.id)} />
             </div>
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 lg:col-span-2">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Materials library</h2>
                 <span className="text-xs font-medium tracking-wide text-slate-500">
@@ -676,7 +712,7 @@ export default async function ClassOverviewPage({
           </section>
         ) : (
           <section className="mt-10 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Student hub</h2>
               <p className="mt-2 text-sm text-slate-600">
                 Use open practice chat, then complete chat assignments as they are published.
@@ -688,7 +724,7 @@ export default async function ClassOverviewPage({
                 Open practice chat
               </Link>
             </div>
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Blueprint status</h2>
               {publishedBlueprint ? (
                 <>

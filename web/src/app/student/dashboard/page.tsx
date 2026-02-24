@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Sidebar from "@/app/components/Sidebar";
 import { requireVerifiedUser } from "@/lib/auth/session";
+import { startServerTimer } from "@/lib/perf";
 
 type AssignmentWithMeta = {
   id: string;
@@ -91,17 +92,15 @@ function getActivityIcon(type: string) {
 }
 
 export default async function StudentDashboardPage() {
-  const { supabase, user } = await requireVerifiedUser({ accountType: "student" });
+  const timer = startServerTimer("student-dashboard");
+  const { supabase, user, profile } = await requireVerifiedUser({ accountType: "student" });
 
-  const [classesResult, enrollmentsResult, recipientsResult] = await Promise.all([
-    supabase
-      .from("classes")
-      .select("id,title,subject,level,owner_id")
-      .order("created_at", { ascending: false }),
+  const [enrollmentsResult, recipientsResult] = await Promise.all([
     supabase
       .from("enrollments")
       .select("class_id,role")
-      .eq("user_id", user.id),
+      .eq("user_id", user.id)
+      .eq("role", "student"),
     supabase
       .from("assignment_recipients")
       .select("assignment_id,status,assigned_at")
@@ -110,9 +109,17 @@ export default async function StudentDashboardPage() {
       .limit(20),
   ]);
 
-  const classes = classesResult.data;
   const enrollments = enrollmentsResult.data;
   const recipients = recipientsResult.data;
+  const classIds = (enrollments ?? []).map((enrollment) => enrollment.class_id);
+  const { data: classes } =
+    classIds.length > 0
+      ? await supabase
+          .from("classes")
+          .select("id,title,subject,level,owner_id")
+          .in("id", classIds)
+          .order("created_at", { ascending: false })
+      : { data: [] };
 
   const assignmentIds = (recipients ?? []).map((r) => r.assignment_id);
 
@@ -159,16 +166,22 @@ export default async function StudentDashboardPage() {
   const enrollmentMap = new Map(
     enrollments?.map((enrollment) => [enrollment.class_id, enrollment.role]) ?? [],
   );
+  const displayName = profile.display_name?.trim() || user.email || "Student";
+  timer.end({ classes: classes?.length ?? 0, assignments: allAssignments.length });
 
   return (
     <div className="surface-page min-h-screen">
-      <Sidebar accountType="student" userEmail={user.email ?? undefined} />
+      <Sidebar
+        accountType="student"
+        userEmail={user.email ?? undefined}
+        userDisplayName={profile.display_name}
+      />
       <div className="sidebar-content">
         <main className="mx-auto max-w-5xl p-6 pt-16">
           <header className="flex flex-wrap items-center justify-between gap-6">
             <div>
               <p className="text-sm font-medium text-slate-500">Student Dashboard</p>
-              <h1 className="text-3xl font-semibold text-slate-900">Welcome, {user.email}</h1>
+              <h1 className="text-3xl font-semibold text-slate-900">Welcome, {displayName}</h1>
               <p className="mt-1 text-sm text-slate-600">
                 Join classes and complete your assignments in one place.
               </p>
@@ -317,7 +330,7 @@ export default async function StudentDashboardPage() {
                         <h3 className="text-xl font-semibold text-slate-900">{classItem.title}</h3>
                       </Link>
                       <p className="mt-2 text-sm text-slate-500">
-                        {classItem.subject || "STEM"} · {classItem.level || "Mixed"}
+                        {classItem.subject || "General"} · {classItem.level || "Mixed"}
                       </p>
                       <div className="mt-4 flex flex-wrap gap-2">
                         <Link

@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #faf9f5;
+  --foreground: #141413;
   --surface-card: #ffffff;
-  --surface-muted: #f1f5f9;
-  --border-default: #e2e8f0;
-  --text-muted: #475569;
+  --surface-muted: #f5f4ed;
+  --border-default: #e8e5dc;
+  --text-muted: #64635e;
   --sidebar-width: 16rem;
   --sidebar-collapsed-width: 5rem;
   --motion-fast: 160ms;
   --motion-standard: 220ms;
   --motion-slow: 320ms;
-  --accent-primary: #0ea5e9;
-  --accent-secondary: #2563eb;
+  --accent-primary: #d97757;
+  --accent-secondary: #3266ad;
 }
 
 @theme inline {
@@ -36,6 +36,10 @@ h1,
 h2,
 h3 {
   font-family: var(--font-heading);
+}
+
+.editorial-title {
+  font-family: var(--font-editorial);
 }
 
 .surface-page {
@@ -67,23 +71,23 @@ h3 {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
-  color: #082f49;
+  background: linear-gradient(135deg, #da886c 0%, #c96e53 100%);
+  color: #fff8f3;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #22d3ee 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #d98266 0%, #bb5f45 100%);
 }
 
 .btn-secondary {
-  border: 1px solid #cbd5e1;
+  border: 1px solid var(--border-default);
   background: #ffffff;
-  color: #1e293b;
+  color: #2b2a27;
 }
 
 .btn-secondary:hover {
-  border-color: #94a3b8;
-  background: #f8fafc;
+  border-color: #d2c9b7;
+  background: #f9f6ef;
 }
 
 .ui-motion-color {
@@ -112,8 +116,8 @@ h3 {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(14, 165, 233, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(14, 165, 233, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(50, 102, 173, 0.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(50, 102, 173, 0.065) 1px, transparent 1px);
   background-size: 36px 36px;
   pointer-events: none;
 }
@@ -128,14 +132,26 @@ h3 {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 80% -20%, rgba(56, 189, 248, 0.22), transparent 45%);
+  background: radial-gradient(circle at 80% -20%, rgba(50, 102, 173, 0.16), transparent 45%);
 }
 
 .ambient-bg::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at -10% 10%, rgba(59, 130, 246, 0.16), transparent 35%);
+  background: radial-gradient(circle at -10% 10%, rgba(217, 119, 87, 0.12), transparent 35%);
+}
+
+.hero-shell {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.92)),
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.14), transparent 42%);
+}
+
+.hero-card {
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
 }
 
 @media (prefers-reduced-motion: reduce) {

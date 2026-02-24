@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "@/app/actions";
+import BrandMark from "@/app/components/BrandMark";
 import type { AccountType } from "@/lib/auth/session";
 
 type Breadcrumb = {
@@ -60,9 +61,12 @@ export default function AuthHeader({
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-5">
         <Link
           href={dashboardHref}
-          className="ui-motion-color text-sm font-semibold tracking-wide text-slate-700 hover:text-cyan-700"
+          className="ui-motion-color flex items-center gap-2 text-sm font-semibold tracking-wide text-slate-700 hover:text-cyan-700"
         >
-          STEM Learning Platform
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-slate-900 text-white">
+            <BrandMark className="h-4 w-4" />
+          </span>
+          Learning Platform
         </Link>
         <div className="flex flex-wrap items-center gap-3 text-sm">
           <Link

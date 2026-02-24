@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { Geist_Mono, Open_Sans, Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -18,9 +19,20 @@ const monoFont = Geist_Mono({
   subsets: ["latin"],
 });
 
+const editorialFont = localFont({
+  src: [
+    {
+      path: "./fonts/SourceSerif4-Variable.ttf",
+      style: "normal",
+      weight: "200 900",
+    },
+  ],
+  variable: "--font-editorial",
+});
+
 export const metadata: Metadata = {
-  title: "STEM Learning Platform",
-  description: "Teacher led, student centered STEM learning with AI powered course blueprints.",
+  title: "Learning Platform",
+  description: "Teacher-led, student-centered learning with AI-powered course blueprints.",
 };
 
 export default function RootLayout({
@@ -31,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} antialiased`}
+        className={`${bodyFont.variable} ${headingFont.variable} ${editorialFont.variable} ${monoFont.variable} antialiased`}
       >
         {children}
       </body>

@@ -21,6 +21,11 @@ const sharedFaq: HelpQA[] = [
     answer:
       "Open the dashboard from the sidebar. Teachers manage created classes there, and students see classes they have joined.",
   },
+  {
+    question: "Can I change my profile name or password?",
+    answer:
+      "Yes. Open Settings to update your display name and change your password with current-password verification.",
+  },
 ];
 
 const teacherFaq: HelpQA[] = [

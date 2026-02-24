@@ -6,6 +6,7 @@ export type AccountType = "teacher" | "student";
 type ProfileRow = {
   id: string;
   account_type: AccountType | null;
+  display_name: string | null;
 };
 
 export type AuthContext = {
@@ -24,8 +25,9 @@ function loginErrorUrl(message: string) {
 export async function getAuthContext(): Promise<AuthContext> {
   const supabase = await createServerSupabaseClient();
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+  const user = session?.user ?? null;
 
   if (!user) {
     return {
@@ -38,7 +40,7 @@ export async function getAuthContext(): Promise<AuthContext> {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("id,account_type")
+    .select("id,account_type,display_name")
     .eq("id", user.id)
     .maybeSingle<ProfileRow>();
 
@@ -84,6 +86,7 @@ export async function requireVerifiedUser(options?: {
     profile: {
       id: context.user.id,
       account_type: accountType,
+      display_name: context.profile?.display_name ?? null,
     },
     accountType,
     isEmailVerified: true,

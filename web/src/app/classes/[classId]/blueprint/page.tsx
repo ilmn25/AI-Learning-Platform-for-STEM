@@ -170,7 +170,7 @@ export default async function BlueprintPage({
           <p className="text-sm font-medium text-slate-500">Course Blueprint</p>
           <h1 className="text-3xl font-semibold">{classRow.title}</h1>
           <p className="text-sm text-slate-500">
-            {classRow.subject || "STEM"} · {classRow.level || "Mixed level"}
+            {classRow.subject || "General"} · {classRow.level || "Mixed level"}
           </p>
         </header>
 

@@ -20,13 +20,28 @@ export async function signIn(formData: FormData) {
   const password = getFormValue(formData, "password");
 
   const supabase = await createServerSupabaseClient();
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
     redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (data?.user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("account_type")
+      .eq("id", data.user.id)
+      .maybeSingle<{ account_type: "teacher" | "student" | null }>();
+
+    if (profile?.account_type === "teacher") {
+      redirect("/teacher/dashboard");
+    }
+    if (profile?.account_type === "student") {
+      redirect("/student/dashboard");
+    }
   }
 
   redirect("/dashboard");

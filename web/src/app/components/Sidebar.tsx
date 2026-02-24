@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { signOut } from "@/app/actions";
+import BrandMark from "@/app/components/BrandMark";
 import type { AccountType } from "@/lib/auth/session";
 
 type NavItem = {
@@ -95,6 +96,7 @@ const studentNavItems: NavItem[] = [
 type SidebarProps = {
   accountType: AccountType;
   userEmail?: string;
+  userDisplayName?: string | null;
   classId?: string;
 };
 
@@ -107,19 +109,23 @@ function SidebarToggleIcon({ collapsed }: { collapsed: boolean }) {
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={1.8}
       aria-hidden="true"
     >
+      <path
+        d="M8 5.5V18.5"
+        strokeLinecap="round"
+      />
       {collapsed ? (
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11 12H18M15 9L18 12L15 15" />
       ) : (
-        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H11M14 9L11 12L14 15" />
       )}
     </svg>
   );
 }
 
-export default function Sidebar({ accountType, userEmail, classId }: SidebarProps) {
+export default function Sidebar({ accountType, userEmail, userDisplayName, classId }: SidebarProps) {
   const pathname = usePathname();
   const [currentHash, setCurrentHash] = useState<string>(() => {
     if (typeof window === "undefined") {
@@ -194,20 +200,14 @@ export default function Sidebar({ accountType, userEmail, classId }: SidebarProp
             className="flex items-center gap-2"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
-                />
-              </svg>
+              <BrandMark className="h-4 w-4" />
             </div>
-            <span className="text-sm font-semibold text-slate-900">STEM</span>
+            <span className="text-sm font-semibold text-slate-900">Learning Platform</span>
           </Link>
         )}
         <button
           onClick={() => setIsCollapsed((value) => !value)}
-          className="ui-motion-color flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-500 hover:border-cyan-300 hover:text-cyan-700"
+          className="ui-motion-color flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-500 hover:border-cyan-300 hover:text-cyan-700"
           aria-label={isCompact ? "Expand sidebar" : "Collapse sidebar"}
           type="button"
         >
@@ -260,7 +260,12 @@ export default function Sidebar({ accountType, userEmail, classId }: SidebarProp
                 {userEmail?.charAt(0).toUpperCase() || "U"}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-medium text-slate-900">{userEmail}</p>
+                <p className="truncate text-sm font-medium text-slate-900">
+                  {userDisplayName || userEmail || "User"}
+                </p>
+                {userDisplayName && userEmail ? (
+                  <p className="truncate text-xs font-medium text-slate-600">{userEmail}</p>
+                ) : null}
                 <p className="truncate text-xs text-slate-500">
                   {accountType === "teacher" ? "Teacher" : "Student"}
                 </p>

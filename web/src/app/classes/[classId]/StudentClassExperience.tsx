@@ -240,7 +240,7 @@ export default function StudentClassExperience({
           <p className="text-sm font-medium text-slate-500">Student Hub</p>
           <h1 className="text-3xl font-semibold text-slate-900">{classTitle}</h1>
           <p className="text-sm text-slate-500">
-            {subject || "STEM"} · {level || "Mixed level"}
+            {subject || "General"} · {level || "Mixed level"}
           </p>
         </header>
 
