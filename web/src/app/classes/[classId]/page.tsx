@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { uploadMaterial } from "@/app/classes/actions";
 import MaterialUploadForm from "./MaterialUploadForm";
 import AuthHeader from "@/app/components/AuthHeader";
 import StudentClassExperience from "@/app/classes/[classId]/StudentClassExperience";
 import TeacherChatMonitorPanel from "@/app/classes/[classId]/chat/TeacherChatMonitorPanel";
-
-export const dynamic = "force-dynamic";
+import { startServerTimer } from "@/lib/perf";
+import { requireVerifiedUser } from "@/lib/auth/session";
 
 type SearchParams = {
   error?: string;
@@ -51,53 +50,53 @@ export default async function ClassOverviewPage({
   params: Promise<{ classId: string }>;
   searchParams?: Promise<SearchParams>;
 }) {
+  const timer = startServerTimer("class-overview");
   const { classId } = await params;
   const resolvedSearchParams = await searchParams;
-  const supabase = await createServerSupabaseClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { supabase, user } = await requireVerifiedUser();
 
-  if (!user) {
-    redirect("/login");
-  }
-
-  const { data: classRow } = await supabase
-    .from("classes")
-    .select("id,title,description,subject,level,join_code,owner_id")
-    .eq("id", classId)
-    .single();
+  const [classResult, enrollmentResult] = await Promise.all([
+    supabase
+      .from("classes")
+      .select("id,title,description,subject,level,join_code,owner_id")
+      .eq("id", classId)
+      .single(),
+    supabase
+      .from("enrollments")
+      .select("role")
+      .eq("class_id", classId)
+      .eq("user_id", user.id)
+      .single(),
+  ]);
+  const classRow = classResult.data;
+  const enrollment = enrollmentResult.data;
 
   if (!classRow) {
     redirect("/dashboard");
   }
 
-  const { data: enrollment } = await supabase
-    .from("enrollments")
-    .select("role")
-    .eq("class_id", classId)
-    .eq("user_id", user.id)
-    .single();
-
   const isTeacher =
     classRow.owner_id === user.id || enrollment?.role === "teacher" || enrollment?.role === "ta";
 
-  const { data: materials } = isTeacher
-    ? await supabase
-        .from("materials")
-        .select("id,title,status,created_at,mime_type,size_bytes,metadata")
-        .eq("class_id", classId)
-        .order("created_at", { ascending: false })
-    : { data: null };
-
-  const { data: publishedBlueprint } = await supabase
-    .from("blueprints")
-    .select("id,version")
-    .eq("class_id", classId)
-    .eq("status", "published")
-    .order("version", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  const [publishedBlueprintResult, materialsResult] = await Promise.all([
+    supabase
+      .from("blueprints")
+      .select("id,version")
+      .eq("class_id", classId)
+      .eq("status", "published")
+      .order("version", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
+    isTeacher
+      ? supabase
+          .from("materials")
+          .select("id,title,status,created_at,mime_type,size_bytes,metadata")
+          .eq("class_id", classId)
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: null }),
+  ]);
+  const publishedBlueprint = publishedBlueprintResult.data;
+  const materials = materialsResult.data;
 
   let teacherChatAssignments: ActivityAssignmentSummary[] = [];
   let teacherQuizAssignments: ActivityAssignmentSummary[] = [];
@@ -271,6 +270,12 @@ export default async function ClassOverviewPage({
         : null;
 
   if (!isTeacher) {
+    timer.end({
+      role: "student",
+      chatAssignments: studentChatAssignments.length,
+      quizAssignments: studentQuizAssignments.length,
+      flashcardsAssignments: studentFlashcardsAssignments.length,
+    });
     return (
       <StudentClassExperience
         classId={classRow.id}
@@ -288,38 +293,73 @@ export default async function ClassOverviewPage({
     );
   }
 
+  const totalAssignments =
+    teacherChatAssignments.length + teacherQuizAssignments.length + teacherFlashcardsAssignments.length;
+
+  timer.end({
+    role: "teacher",
+    publishedBlueprint: Boolean(publishedBlueprint),
+    assignments: totalAssignments,
+    materials: materials?.length ?? 0,
+  });
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen surface-page text-slate-900">
       <AuthHeader
         activeNav="dashboard"
         classContext={{ classId: classRow.id, isTeacher }}
-        breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: classRow.title }]}
+        breadcrumbs={[{ label: "Dashboard", href: "/teacher/dashboard" }, { label: classRow.title }]}
       />
       <div className="mx-auto w-full max-w-5xl px-6 py-16">
-        <header className="mb-10 space-y-2">
-          <p className="text-sm font-medium text-slate-400">Class Overview</p>
-          <h1 className="text-3xl font-semibold">{classRow.title}</h1>
-          <p className="text-sm text-slate-400">
-            {classRow.subject || "STEM"} · {classRow.level || "Mixed level"}
+        <header className="mb-10 rounded-[2rem] border border-[#e7dece] bg-white px-7 py-7 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8e8577]">Class Overview</p>
+          <h1 className="editorial-title mt-2 text-4xl text-slate-900">{classRow.title}</h1>
+          <p className="mt-2 text-sm text-slate-500">
+            {classRow.subject || "General"} · {classRow.level || "Mixed level"}
           </p>
         </header>
 
         {errorMessage ? (
-          <div className="mb-6 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-200">
+          <div className="mb-6 rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-3 text-sm text-rose-700">
             {errorMessage}
           </div>
         ) : null}
 
         {uploadNotice ? (
-          <div className="mb-6 rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+          <div className="notice-warm mb-6 rounded-xl px-4 py-3 text-sm">
             {uploadNotice}
           </div>
         ) : null}
 
+        <section className="mb-8 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+              Blueprint
+            </p>
+            <p className="mt-2 text-sm font-semibold text-slate-900">
+              {publishedBlueprint ? "Published and active" : "Draft / pending publication"}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+              Assignments
+            </p>
+            <p className="mt-2 text-sm font-semibold text-slate-900">{totalAssignments} recent assignments</p>
+          </div>
+          <div className="rounded-2xl border border-[#e6dece] bg-white p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8e8577]">
+              Materials
+            </p>
+            <p className="mt-2 text-sm font-semibold text-slate-900">
+              {materials?.length ?? 0} item{(materials?.length ?? 0) === 1 ? "" : "s"}
+            </p>
+          </div>
+        </section>
+
         <section className="grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6">
+          <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Course blueprint</h2>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-slate-600">
               {isTeacher
                 ? "Generate a structured blueprint from uploaded materials to unlock AI activities."
                 : publishedBlueprint
@@ -329,43 +369,43 @@ export default async function ClassOverviewPage({
             {isTeacher ? (
               <Link
                 href={`/classes/${classRow.id}/blueprint`}
-                className="ui-motion-lift mt-6 inline-flex rounded-xl bg-cyan-400/90 px-4 py-2 text-sm font-semibold text-slate-950 hover:-translate-y-0.5"
+                className="btn-warm ui-motion-lift mt-6 inline-flex rounded-xl px-4 py-2 text-sm font-semibold hover:-translate-y-0.5"
               >
                 Open blueprint studio
               </Link>
             ) : publishedBlueprint ? (
               <Link
                 href={`/classes/${classRow.id}/blueprint/published`}
-                className="ui-motion-lift mt-6 inline-flex rounded-xl border border-cyan-400/40 px-4 py-2 text-sm font-semibold text-cyan-200 hover:-translate-y-0.5"
+                className="ui-motion-lift mt-6 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-sm font-semibold text-[#874934] hover:-translate-y-0.5 hover:bg-[#fbefe7]"
               >
                 View published blueprint
               </Link>
             ) : (
-              <span className="mt-6 inline-flex rounded-xl border border-white/10 px-4 py-2 text-sm text-slate-500">
+              <span className="mt-6 inline-flex rounded-xl border border-[#ddd3c2] px-4 py-2 text-sm text-slate-500">
                 Awaiting publication
               </span>
             )}
           </div>
-          <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6">
+          <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
             <h2 className="text-lg font-semibold">Enrollment</h2>
             {isTeacher ? (
-              <div className="mt-3 rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-200">
+              <div className="mt-3 rounded-2xl border border-[#d3b092] bg-[#fdf1eb] px-4 py-3 text-sm text-[#8c4b35]">
                 Join code: <span className="font-semibold">{classRow.join_code}</span>
               </div>
             ) : (
-              <p className="mt-3 text-sm text-slate-400">You are enrolled in this class.</p>
+              <p className="mt-3 text-sm text-slate-500">You are enrolled in this class.</p>
             )}
-            <p className="mt-4 text-sm text-slate-400">
+            <p className="mt-4 text-sm text-slate-500">
               {classRow.description || "Add a class description and upload materials to begin."}
             </p>
           </div>
         </section>
 
-        <section className="mt-10 rounded-3xl border border-white/10 bg-slate-900/70 p-6">
+        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">AI Chat</h2>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-slate-600">
                 {publishedBlueprint
                   ? "Always-on class chat is available for teachers and students. Use this panel to monitor student chat history."
                   : "Publish the blueprint to unlock always-on chat and assignment chat experiences."}
@@ -374,13 +414,13 @@ export default async function ClassOverviewPage({
             <div className="flex flex-wrap gap-2">
               <Link
                 href="#teacher-chat-monitor"
-                className="rounded-xl border border-white/10 px-4 py-2 text-xs font-semibold text-slate-200 hover:border-white/30 hover:bg-white/5"
+                className="ui-motion-color rounded-xl border border-[#ddd3c2] px-4 py-2 text-xs font-semibold text-slate-600 hover:border-[#c8a786] hover:bg-[#f9f3e8] hover:text-[#844633]"
               >
                 Open chat monitor
               </Link>
               <Link
                 href={`/classes/${classRow.id}/activities/chat/new`}
-                className="rounded-xl bg-cyan-400/90 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-cyan-300"
+                className="btn-warm rounded-xl px-4 py-2 text-xs font-semibold"
               >
                 Create chat assignment
               </Link>
@@ -395,22 +435,22 @@ export default async function ClassOverviewPage({
               teacherChatAssignments.slice(0, 5).map((assignment) => (
                 <div
                   key={assignment.assignmentId}
-                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3"
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-slate-100">{assignment.title}</p>
+                    <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
                     <p className="text-xs text-slate-500">{formatDueDate(assignment.dueAt)}</p>
                   </div>
                   <Link
                     href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                    className="rounded-lg border border-cyan-400/40 px-3 py-1.5 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/10"
+                    className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
                   >
                     Review
                   </Link>
                 </div>
               ))
             ) : (
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-slate-500">
                 No chat assignments yet. Create one to start collecting student submissions.
               </p>
             )}
@@ -421,17 +461,17 @@ export default async function ClassOverviewPage({
               <TeacherChatMonitorPanel classId={classRow.id} />
             </div>
           ) : (
-            <p className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-100">
+            <p className="mt-6 rounded-2xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-800">
               Publish the class blueprint before opening teacher chat monitor.
             </p>
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-white/10 bg-slate-900/70 p-6">
+        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Quizzes</h2>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-slate-600">
                 {publishedBlueprint
                   ? "Generate, curate, publish, and assign blueprint-grounded quizzes."
                   : "Publish the blueprint to unlock quiz generation."}
@@ -440,7 +480,7 @@ export default async function ClassOverviewPage({
             {isTeacher ? (
               <Link
                 href={`/classes/${classRow.id}/activities/quiz/new`}
-                className="rounded-xl bg-cyan-400/90 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-cyan-300"
+                className="btn-warm rounded-xl px-4 py-2 text-xs font-semibold"
               >
                 Generate quiz draft
               </Link>
@@ -456,22 +496,22 @@ export default async function ClassOverviewPage({
                 teacherQuizAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-100">{assignment.title}</p>
+                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
                       <p className="text-xs text-slate-500">{formatDueDate(assignment.dueAt)}</p>
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                      className="rounded-lg border border-cyan-400/40 px-3 py-1.5 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/10"
+                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
                     >
                       Review
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500">
                   No quiz assignments yet. Generate and publish a quiz draft to begin.
                 </p>
               )}
@@ -485,10 +525,10 @@ export default async function ClassOverviewPage({
                 studentQuizAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-100">{assignment.title}</p>
+                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
                       <p className="text-xs text-slate-500">
                         {formatDueDate(assignment.dueAt)} · Status:{" "}
                         {formatAssignmentStatus(assignment.status)}
@@ -496,14 +536,14 @@ export default async function ClassOverviewPage({
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/quiz`}
-                      className="rounded-lg border border-cyan-400/40 px-3 py-1.5 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/10"
+                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
                     >
                       Open
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500">
                   No quiz assignments yet. Your teacher will publish them here.
                 </p>
               )}
@@ -511,11 +551,11 @@ export default async function ClassOverviewPage({
           )}
         </section>
 
-        <section className="mt-10 rounded-3xl border border-white/10 bg-slate-900/70 p-6">
+        <section className="mt-10 rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-semibold">Flashcards</h2>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-slate-600">
                 {publishedBlueprint
                   ? "Generate, curate, publish, and assign blueprint-grounded flashcards."
                   : "Publish the blueprint to unlock flashcard generation."}
@@ -524,7 +564,7 @@ export default async function ClassOverviewPage({
             {isTeacher ? (
               <Link
                 href={`/classes/${classRow.id}/activities/flashcards/new`}
-                className="rounded-xl bg-cyan-400/90 px-4 py-2 text-xs font-semibold text-slate-950 hover:bg-cyan-300"
+                className="btn-warm rounded-xl px-4 py-2 text-xs font-semibold"
               >
                 Generate flashcards draft
               </Link>
@@ -540,22 +580,22 @@ export default async function ClassOverviewPage({
                 teacherFlashcardsAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-100">{assignment.title}</p>
+                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
                       <p className="text-xs text-slate-500">{formatDueDate(assignment.dueAt)}</p>
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/review`}
-                      className="rounded-lg border border-cyan-400/40 px-3 py-1.5 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/10"
+                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
                     >
                       Review
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500">
                   No flashcards assignments yet. Generate and publish a draft to begin.
                 </p>
               )}
@@ -569,10 +609,10 @@ export default async function ClassOverviewPage({
                 studentFlashcardsAssignments.slice(0, 5).map((assignment) => (
                   <div
                     key={assignment.assignmentId}
-                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3"
+                    className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3"
                   >
                     <div>
-                      <p className="text-sm font-semibold text-slate-100">{assignment.title}</p>
+                      <p className="text-sm font-semibold text-slate-900">{assignment.title}</p>
                       <p className="text-xs text-slate-500">
                         {formatDueDate(assignment.dueAt)} · Status:{" "}
                         {formatAssignmentStatus(assignment.status)}
@@ -580,14 +620,14 @@ export default async function ClassOverviewPage({
                     </div>
                     <Link
                       href={`/classes/${classRow.id}/assignments/${assignment.assignmentId}/flashcards`}
-                      className="rounded-lg border border-cyan-400/40 px-3 py-1.5 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/10"
+                      className="ui-motion-color rounded-lg border border-[#d3b092] px-3 py-1.5 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
                     >
                       Open
                     </Link>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-slate-500">
                   No flashcards assignments yet. Your teacher will publish them here.
                 </p>
               )}
@@ -597,17 +637,17 @@ export default async function ClassOverviewPage({
 
         {isTeacher ? (
           <section className="mt-10 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 lg:col-span-1">
+            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm lg:col-span-1">
               <h2 className="text-lg font-semibold">Upload materials</h2>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-slate-600">
                 Supported formats: PDF, DOCX, PPTX.
               </p>
               <MaterialUploadForm action={uploadMaterial.bind(null, classRow.id)} />
             </div>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 lg:col-span-2">
+            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm lg:col-span-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Materials library</h2>
-                <span className="text-xs font-medium tracking-wide text-slate-400">
+                <span className="text-xs font-medium tracking-wide text-slate-500">
                   {materials?.length ?? 0} items
                 </span>
               </div>
@@ -616,7 +656,7 @@ export default async function ClassOverviewPage({
                   materials.map((material) => (
                     <div
                       key={material.id}
-                      className="flex flex-col gap-1 rounded-2xl border border-white/10 bg-slate-950/60 p-4"
+                      className="flex flex-col gap-1 rounded-2xl border border-slate-200 bg-white p-4"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="text-sm font-semibold">{material.title}</p>
@@ -624,10 +664,10 @@ export default async function ClassOverviewPage({
                           <span
                             className={`rounded-full border px-3 py-1 text-xs ${
                               material.status === "processing"
-                                ? "border-cyan-400/30 bg-cyan-400/10 text-cyan-200"
+                                ? "border-[#d3b092] bg-[#fdf1eb] text-[#8a4934]"
                                 : material.status === "failed"
-                                  ? "border-rose-500/40 bg-rose-500/10 text-rose-200"
-                                  : "border-white/10 text-slate-400"
+                                  ? "border-rose-500/40 bg-rose-500/10 text-rose-700"
+                                  : "border-slate-200 text-slate-500"
                             }`}
                           >
                             {material.status === "processing"
@@ -637,7 +677,7 @@ export default async function ClassOverviewPage({
                                 : material.status || "Pending"}
                           </span>
                           {material.status === "processing" ? (
-                            <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-300" />
+                            <span className="h-2 w-2 animate-pulse rounded-full bg-[#cb9f82]" />
                           ) : null}
                         </div>
                       </div>
@@ -649,21 +689,21 @@ export default async function ClassOverviewPage({
                       </p>
                       {Array.isArray(material.metadata?.warnings) &&
                       material.metadata.warnings.length > 0 ? (
-                        <ul className="text-xs text-amber-200">
+                        <ul className="text-xs text-amber-700">
                           {material.metadata.warnings.map((warning: string) => (
                             <li key={warning}>{warning}</li>
                           ))}
                         </ul>
                       ) : null}
                       {material.status === "processing" ? (
-                        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/10">
-                          <div className="h-full w-2/3 animate-pulse rounded-full bg-cyan-400/60" />
+                        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-slate-200">
+                          <div className="h-full w-2/3 animate-pulse rounded-full bg-[#cfad94]" />
                         </div>
                       ) : null}
                     </div>
                   ))
                 ) : (
-                  <div className="rounded-2xl border border-dashed border-white/10 bg-slate-950/40 p-4 text-sm text-slate-400">
+                  <div className="rounded-2xl border border-dashed border-[#dfd5c4] bg-[#f7f2e8] p-4 text-sm text-slate-500">
                     No materials yet. Upload materials to begin blueprint generation.
                   </div>
                 )}
@@ -672,34 +712,34 @@ export default async function ClassOverviewPage({
           </section>
         ) : (
           <section className="mt-10 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6">
+            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Student hub</h2>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-slate-600">
                 Use open practice chat, then complete chat assignments as they are published.
               </p>
               <Link
                 href={`/classes/${classRow.id}/chat`}
-                className="mt-4 inline-flex rounded-xl border border-cyan-400/40 px-4 py-2 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/10"
+                className="ui-motion-color mt-4 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
               >
                 Open practice chat
               </Link>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6">
+            <div className="rounded-3xl border border-[#e6dece] bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold">Blueprint status</h2>
               {publishedBlueprint ? (
                 <>
-                  <p className="mt-2 text-sm text-slate-400">
+                  <p className="mt-2 text-sm text-slate-600">
                     The latest blueprint is published and ready.
                   </p>
                   <Link
                     href={`/classes/${classRow.id}/blueprint/published`}
-                    className="ui-motion-color mt-4 inline-flex rounded-xl border border-cyan-400/40 px-4 py-2 text-xs font-semibold text-cyan-200 hover:bg-cyan-400/10"
+                    className="ui-motion-color mt-4 inline-flex rounded-xl border border-[#d3b092] px-4 py-2 text-xs font-semibold text-[#8a4934] hover:bg-[#fbefe6]"
                   >
                     View published blueprint
                   </Link>
                 </>
               ) : (
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-slate-600">
                   Awaiting teacher approval. Check back soon for AI powered activities.
                 </p>
               )}
