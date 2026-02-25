@@ -81,3 +81,6 @@ This document is the operating guideline for all contributors and agents. It def
 
 - Use small, reviewable changes.
 - Commit messages should be descriptive and consistent.
+- This repository has two remotes: `origin` and `org`.
+- When pushing a branch, push to both remotes to keep them in sync.
+  Example: `git push origin HEAD` and `git push org HEAD`.
