@@ -603,6 +603,10 @@ export async function createFlashcardsAssignment(
 
     redirect(`/classes/${classId}/assignments/${assignmentId}/review?created=1`);
   } catch (error) {
+    // Re-throw redirect errors - they are expected and should propagate
+    if (isRedirectError(error)) {
+      throw error;
+    }
     redirectWithError(
       `/classes/${classId}/activities/flashcards/${activityId}/edit`,
       error instanceof Error ? error.message : "Failed to create assignment.",
