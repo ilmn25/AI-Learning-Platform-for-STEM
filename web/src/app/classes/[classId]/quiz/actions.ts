@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { generateTextWithFallback } from "@/lib/ai/providers";
 import {
   createWholeClassAssignment,
@@ -31,6 +32,7 @@ import {
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const QUIZ_REQUEST_PURPOSE = "quiz_generation_v2";
+const QUIZ_GENERATION_ERROR_MESSAGE = "Unable to generate quiz draft right now. Please try again.";
 
 function redirectWithError(path: string, message: string) {
   redirect(`${path}?error=${encodeURIComponent(message)}`);
@@ -42,6 +44,26 @@ function getFormString(formData: FormData, key: string) {
     return "";
   }
   return value.trim();
+}
+
+function toFriendlyQuizGenerationError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return QUIZ_GENERATION_ERROR_MESSAGE;
+  }
+
+  if (/NEXT_REDIRECT/i.test(error.message)) {
+    return QUIZ_GENERATION_ERROR_MESSAGE;
+  }
+
+  if (/timed out/i.test(error.message)) {
+    return "Quiz generation timed out. Please try again.";
+  }
+
+  if (/no json object found|not valid json|invalid quiz json/i.test(error.message)) {
+    return "The AI response was incomplete. Please try generating the quiz again.";
+  }
+
+  return error.message;
 }
 
 async function logQuizAiRequest(input: {
@@ -149,7 +171,7 @@ export async function generateQuizDraft(classId: string, formData: FormData) {
       system: prompt.system,
       user: prompt.user,
       temperature: 0.2,
-      maxTokens: 1800,
+      maxTokens: 8000,
     });
     usedProvider = result.provider;
 
@@ -228,6 +250,10 @@ export async function generateQuizDraft(classId: string, formData: FormData) {
 
     redirect(`/classes/${classId}/activities/quiz/${activity.id}/edit?created=1`);
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     await logQuizAiRequest({
       supabase,
       classId,
@@ -239,7 +265,7 @@ export async function generateQuizDraft(classId: string, formData: FormData) {
 
     redirectWithError(
       `/classes/${classId}/activities/quiz/new`,
-      error instanceof Error ? error.message : "Failed to generate quiz draft.",
+      toFriendlyQuizGenerationError(error),
     );
   }
 }

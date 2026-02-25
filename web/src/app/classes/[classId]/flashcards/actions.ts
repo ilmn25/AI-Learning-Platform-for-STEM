@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { generateTextWithFallback } from "@/lib/ai/providers";
 import {
   createWholeClassAssignment,
@@ -31,6 +32,8 @@ import { retrieveMaterialContext } from "@/lib/materials/retrieval";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const FLASHCARDS_REQUEST_PURPOSE = "flashcards_generation_v1";
+const FLASHCARDS_GENERATION_ERROR_MESSAGE =
+  "Unable to generate flashcards draft right now. Please try again.";
 
 function redirectWithError(path: string, message: string) {
   redirect(`${path}?error=${encodeURIComponent(message)}`);
@@ -42,6 +45,26 @@ function getFormString(formData: FormData, key: string) {
     return "";
   }
   return value.trim();
+}
+
+function toFriendlyFlashcardsGenerationError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return FLASHCARDS_GENERATION_ERROR_MESSAGE;
+  }
+
+  if (/NEXT_REDIRECT/i.test(error.message)) {
+    return FLASHCARDS_GENERATION_ERROR_MESSAGE;
+  }
+
+  if (/timed out/i.test(error.message)) {
+    return "Flashcards generation timed out. Please try again.";
+  }
+
+  if (/no json object found|not valid json|invalid flashcards json/i.test(error.message)) {
+    return "The AI response was incomplete. Please try generating the flashcards again.";
+  }
+
+  return error.message;
 }
 
 async function restoreFlashcardsDraftState(input: {
@@ -212,7 +235,7 @@ export async function generateFlashcardsDraft(classId: string, formData: FormDat
       system: prompt.system,
       user: prompt.user,
       temperature: 0.2,
-      maxTokens: 1600,
+      maxTokens: 8000,
     });
     usedProvider = result.provider;
 
@@ -287,6 +310,10 @@ export async function generateFlashcardsDraft(classId: string, formData: FormDat
 
     redirect(`/classes/${classId}/activities/flashcards/${activity.id}/edit?created=1`);
   } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+
     await logFlashcardsAiRequest({
       supabase,
       classId,
@@ -298,7 +325,7 @@ export async function generateFlashcardsDraft(classId: string, formData: FormDat
 
     redirectWithError(
       `/classes/${classId}/activities/flashcards/new`,
-      error instanceof Error ? error.message : "Failed to generate flashcards draft.",
+      toFriendlyFlashcardsGenerationError(error),
     );
   }
 }
