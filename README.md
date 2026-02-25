@@ -65,6 +65,16 @@ pnpm dev
 - `pnpm test`: run tests.
 - `pnpm test:watch`: run tests in watch mode.
 
+**Git Remotes**
+
+- This repository uses two remotes: `origin` and `org`.
+- Push active branches to both remotes to keep mirrors aligned:
+
+```bash
+git push origin HEAD
+git push org HEAD
+```
+
 **Database Migrations**
 
 - Apply migrations using the Supabase CLI or dashboard SQL editor.

@@ -262,6 +262,21 @@ describe("chat actions", () => {
     }
   });
 
+  it("returns a friendly error when chat generation throws internal redirect tokens", async () => {
+    generateGroundedChatResponse.mockRejectedValueOnce(new Error("NEXT_REDIRECT"));
+
+    const formData = new FormData();
+    formData.set("message", "Can we review this concept?");
+    formData.set("transcript", "[]");
+
+    const result = await sendOpenPracticeMessage("class-1", formData);
+
+    expect(result).toEqual({
+      ok: false,
+      error: "Unable to generate a chat response right now. Please try again.",
+    });
+  });
+
   it("blocks assignment message when student is not recipient", async () => {
     vi.mocked(requireAuthenticatedUser).mockResolvedValueOnce({
       supabase: {

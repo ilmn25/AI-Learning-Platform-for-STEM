@@ -26,6 +26,17 @@ Run a single test file:
 pnpm vitest run path/to/testfile.test.ts
 ```
 
+## Git Remotes
+
+- This repository has two configured remotes for push/fetch: `origin` and `org`.
+- When pushing a branch, push to both remotes so they stay synchronized.
+- Recommended commands:
+
+```bash
+git push origin HEAD
+git push org HEAD
+```
+
 ## Deployment Commands
 
 ### Vercel (Frontend/App)

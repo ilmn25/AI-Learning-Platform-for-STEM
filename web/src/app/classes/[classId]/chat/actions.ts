@@ -30,6 +30,8 @@ type ChatActionResult =
       error: string;
     };
 
+const CHAT_GENERATION_ERROR_MESSAGE = "Unable to generate a chat response right now. Please try again.";
+
 function getFormString(formData: FormData, key: string) {
   const value = formData.get(key);
   if (!value || typeof value !== "string") {
@@ -40,6 +42,18 @@ function getFormString(formData: FormData, key: string) {
 
 function redirectWithError(path: string, message: string) {
   redirect(`${path}?error=${encodeURIComponent(message)}`);
+}
+
+function toFriendlyChatActionError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return CHAT_GENERATION_ERROR_MESSAGE;
+  }
+
+  if (/NEXT_REDIRECT/i.test(error.message)) {
+    return CHAT_GENERATION_ERROR_MESSAGE;
+  }
+
+  return error.message;
 }
 
 export async function sendOpenPracticeMessage(
@@ -89,7 +103,7 @@ export async function sendOpenPracticeMessage(
   } catch (error) {
     return {
       ok: false,
-      error: error instanceof Error ? error.message : "Failed to generate chat response.",
+      error: toFriendlyChatActionError(error),
     };
   }
 }
@@ -268,7 +282,7 @@ export async function sendAssignmentMessage(
   } catch (error) {
     return {
       ok: false,
-      error: error instanceof Error ? error.message : "Failed to generate chat response.",
+      error: toFriendlyChatActionError(error),
     };
   }
 }

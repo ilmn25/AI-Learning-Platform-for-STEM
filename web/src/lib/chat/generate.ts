@@ -7,6 +7,8 @@ import { parseChatModelResponse } from "@/lib/chat/validation";
 import { retrieveMaterialContext } from "@/lib/materials/retrieval";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
+const DEFAULT_CHAT_MAX_TOKENS = 9000;
+
 export type GroundedChatPurpose =
   | "student_chat_open_v2"
   | "student_chat_assignment_v2"
@@ -88,6 +90,35 @@ function normalizeCitationSourceLabel(sourceLabel: string, knownLabels: Map<stri
   return knownLabels.get(key) ?? sourceLabel.trim();
 }
 
+function resolveChatMaxTokens() {
+  const rawValue = process.env.CHAT_GENERATION_MAX_TOKENS;
+  const parsed = Number(rawValue);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return DEFAULT_CHAT_MAX_TOKENS;
+  }
+  return Math.floor(parsed);
+}
+
+function toFriendlyChatGenerationError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return "Unable to generate a chat response right now. Please try again.";
+  }
+
+  if (/NEXT_REDIRECT/i.test(error.message)) {
+    return "Unable to generate a chat response right now. Please try again.";
+  }
+
+  if (/timed out/i.test(error.message)) {
+    return "Chat response generation timed out. Please try again.";
+  }
+
+  if (/no json object found|not valid json|model response payload is invalid/i.test(error.message)) {
+    return "The AI response was incomplete. Please ask again.";
+  }
+
+  return error.message;
+}
+
 export async function generateGroundedChatResponse(input: {
   classId: string;
   classTitle: string;
@@ -100,32 +131,34 @@ export async function generateGroundedChatResponse(input: {
   purpose: GroundedChatPurpose;
 }): Promise<ChatModelResponse> {
   const supabase = await createServerSupabaseClient();
-
-  const blueprintContext = await loadPublishedBlueprintContext(input.classId);
-  const retrievalQuery = input.assignmentInstructions
-    ? `${input.assignmentInstructions}\n\n${input.userMessage}`
-    : input.userMessage;
-  const materialContext = await retrieveMaterialContext(input.classId, retrievalQuery);
-  const prompt = buildChatPrompt({
-    classTitle: input.classTitle,
-    userMessage: input.userMessage,
-    transcript: input.transcript,
-    blueprintContext: blueprintContext.blueprintContext,
-    materialContext,
-    compactedMemoryContext: input.compactedMemoryContext,
-    assignmentInstructions: input.assignmentInstructions,
-  });
-
   const startedAt = Date.now();
+  let usedProvider = "unknown";
+
   try {
+    const blueprintContext = await loadPublishedBlueprintContext(input.classId);
+    const retrievalQuery = input.assignmentInstructions
+      ? `${input.assignmentInstructions}\n\n${input.userMessage}`
+      : input.userMessage;
+    const materialContext = await retrieveMaterialContext(input.classId, retrievalQuery);
+    const prompt = buildChatPrompt({
+      classTitle: input.classTitle,
+      userMessage: input.userMessage,
+      transcript: input.transcript,
+      blueprintContext: blueprintContext.blueprintContext,
+      materialContext,
+      compactedMemoryContext: input.compactedMemoryContext,
+      assignmentInstructions: input.assignmentInstructions,
+    });
+
     const result = await generateTextWithFallback({
       system: prompt.system,
       user: prompt.user,
       temperature: 0.2,
-      maxTokens: 1200,
+      maxTokens: resolveChatMaxTokens(),
       sessionId: input.sessionId,
       transforms: resolveOpenRouterTransforms(),
     });
+    usedProvider = result.provider;
 
     const parsed = parseChatModelResponse(result.content);
     const sourceLabels = collectSourceLabels(blueprintContext.blueprintContext, materialContext);
@@ -165,11 +198,11 @@ export async function generateGroundedChatResponse(input: {
       supabase,
       classId: input.classId,
       userId: input.userId,
-      provider: "unknown",
+      provider: usedProvider,
       purpose: input.purpose,
       status: "error",
       latencyMs: Date.now() - startedAt,
     });
-    throw error;
+    throw new Error(toFriendlyChatGenerationError(error));
   }
 }
