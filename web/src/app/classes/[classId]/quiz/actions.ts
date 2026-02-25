@@ -518,6 +518,10 @@ export async function createQuizAssignment(
 
     redirect(`/classes/${classId}/assignments/${assignmentId}/review?created=1`);
   } catch (error) {
+    // Re-throw redirect errors - they are expected and should propagate
+    if (isRedirectError(error) || (error instanceof Error && error.message.includes("NEXT_REDIRECT"))) {
+      throw error;
+    }
     redirectWithError(
       `/classes/${classId}/activities/quiz/${activityId}/edit`,
       error instanceof Error ? error.message : "Failed to create assignment.",

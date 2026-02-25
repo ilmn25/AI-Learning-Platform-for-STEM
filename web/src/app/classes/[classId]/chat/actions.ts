@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import {
   createWholeClassAssignment,
   loadStudentAssignmentContext,
@@ -202,6 +203,10 @@ export async function createChatAssignment(classId: string, formData: FormData) 
       dueAt,
     });
   } catch (error) {
+    // Re-throw redirect errors - they are expected and should propagate
+    if (isRedirectError(error) || (error instanceof Error && error.message.includes("NEXT_REDIRECT"))) {
+      throw error;
+    }
     redirectWithError(
       `/classes/${classId}/activities/chat/new`,
       error instanceof Error ? error.message : "Failed to create assignment.",
