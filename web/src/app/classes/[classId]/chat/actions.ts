@@ -204,7 +204,7 @@ export async function createChatAssignment(classId: string, formData: FormData) 
     });
   } catch (error) {
     // Re-throw redirect errors - they are expected and should propagate
-    if (isRedirectError(error) || (error instanceof Error && error.message.includes("NEXT_REDIRECT"))) {
+    if (isRedirectError(error)) {
       throw error;
     }
     redirectWithError(

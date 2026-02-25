@@ -604,7 +604,7 @@ export async function createFlashcardsAssignment(
     redirect(`/classes/${classId}/assignments/${assignmentId}/review?created=1`);
   } catch (error) {
     // Re-throw redirect errors - they are expected and should propagate
-    if (isRedirectError(error) || (error instanceof Error && error.message.includes("NEXT_REDIRECT"))) {
+    if (isRedirectError(error)) {
       throw error;
     }
     redirectWithError(
