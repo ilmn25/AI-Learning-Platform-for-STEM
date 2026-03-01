@@ -9,7 +9,7 @@
 - [x] Phase 4: Global shell and navigation
 - [x] Phase 5: Low/medium-risk pages
 - [x] Phase 6: Dashboard and class listing pages
-- [~] Phase 7: Class workspace and assignment surfaces (partial)
+- [x] Phase 7: Class workspace and assignment surfaces
 - [ ] Phase 8: High-complexity editors
 - [ ] Phase 9: Cleanup and docs finalization
 
@@ -39,5 +39,5 @@
 - [x] `teacher/*` and `student/*`
 - [~] `classes/[classId]/*`
 - [ ] `classes/[classId]/blueprint/*` (except shared shell integration)
-- [ ] `assignments/*`
+- [x] `assignments/*`
 - [ ] `activities/*`

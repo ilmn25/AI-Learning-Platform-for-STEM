@@ -44,6 +44,19 @@ Refactor the full frontend to a unified shadcn/Radix/Motion stack while preservi
   - student dashboards/classes
   - join/new class
   - class overview partial + class workspace transitions
+  - assignment surfaces:
+    - `web/src/app/classes/[classId]/assignments/[assignmentId]/chat/page.tsx`
+    - `web/src/app/classes/[classId]/assignments/[assignmentId]/quiz/page.tsx`
+    - `web/src/app/classes/[classId]/assignments/[assignmentId]/flashcards/page.tsx`
+    - `web/src/app/classes/[classId]/assignments/[assignmentId]/review/page.tsx`
+  - assignment client panels:
+    - `AssignmentChatPanel.tsx`
+    - `QuizAssignmentPanel.tsx`
+    - `FlashcardsAssignmentPanel.tsx`
+  - upgrades in the above surfaces:
+    - migrated legacy alert/card/input/textarea/button patterns to shared shadcn primitives
+    - added consistent Lucide icon + badge states for assignment metadata
+    - added Motion stagger/entry transitions for student assignment interaction panels
 - Added phase tracker:
   - `UI_REFACTOR_TRACKER.md`
 - Updated design docs:
@@ -54,8 +67,10 @@ Refactor the full frontend to a unified shadcn/Radix/Motion stack while preservi
   - `web/src/app/classes/[classId]/blueprint/BlueprintEditor.tsx`
   - `web/src/app/classes/[classId]/activities/quiz/[activityId]/edit/QuizDraftEditor.tsx`
   - `web/src/app/classes/[classId]/activities/flashcards/[activityId]/edit/FlashcardsDraftEditor.tsx`
-  - `web/src/app/classes/[classId]/assignments/[assignmentId]/review/page.tsx`
-  - assignment panels and some activity-specific flows
+  - `web/src/app/classes/[classId]/blueprint/page.tsx`
+  - `web/src/app/classes/[classId]/blueprint/overview/page.tsx`
+  - `web/src/app/classes/[classId]/blueprint/published/page.tsx`
+  - additional activity-specific routes under `web/src/app/classes/[classId]/activities/*`
 - Blueprint map inline SVG is intentionally retained for semantic diagram rendering.
 
 ## Validation Results (Latest)
@@ -77,8 +92,7 @@ Notes:
 ## Next Session Checklist
 
 1. Finish deep editor migrations (blueprint/editor + quiz/flashcards draft editors).
-2. Migrate assignment review and remaining assignment panels to shared primitives.
+2. Complete blueprint route page migrations (`page`, `overview`, `published`) with shared primitives.
 3. Add stricter lint guardrail for inline SVG allowlist (`BrandMark` + blueprint diagram only).
 4. Tighten accessibility pass on keyboard/focus for editor-heavy pages.
-5. Run full quality gates again and update `UI_REFACTOR_TRACKER.md` to 100%.
-
+5. Run full quality gates again and update `UI_REFACTOR_TRACKER.md` toward 100%.
