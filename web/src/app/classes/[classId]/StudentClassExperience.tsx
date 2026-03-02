@@ -31,6 +31,7 @@ type StudentClassExperienceProps = {
   quizAssignments: ActivityAssignmentSummary[];
   flashcardsAssignments: ActivityAssignmentSummary[];
   initialView?: "chat" | null;
+  isPreviewMode?: boolean;
 };
 
 function formatDueDate(value: string | null) {
@@ -66,6 +67,7 @@ export default function StudentClassExperience({
   quizAssignments,
   flashcardsAssignments,
   initialView = null,
+  isPreviewMode = false,
 }: StudentClassExperienceProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -236,6 +238,18 @@ export default function StudentClassExperience({
         classContext={{ classId, isTeacher: false }}
         breadcrumbs={[{ label: "Dashboard", href: "/student/dashboard" }, { label: classTitle }]}
       />
+
+      {isPreviewMode && (
+        <div className="bg-amber-100 px-4 py-3 text-center text-sm font-medium text-amber-900 shadow-sm flex items-center justify-center gap-4">
+          <span>You are currently previewing this class as a student.</span>
+          <Link 
+            href={`/classes/${classId}`} 
+            className="rounded-full bg-amber-200 px-4 py-1.5 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-300"
+          >
+            Exit Preview
+          </Link>
+        </div>
+      )}
 
       <div className="mx-auto w-full max-w-6xl px-6 py-16">
         <header className="mb-8 space-y-2">

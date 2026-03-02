@@ -14,6 +14,7 @@ type SearchParams = {
   error?: string;
   uploaded?: string;
   view?: string;
+  as?: string; // Add support for 'as=student' preview mode
 };
 
 type ActivityAssignmentSummary = {
@@ -77,8 +78,14 @@ export default async function ClassOverviewPage({
     redirect("/dashboard");
   }
 
-  const isTeacher =
+  const isActualTeacher =
     classRow.owner_id === user.id || enrollment?.role === "teacher" || enrollment?.role === "ta";
+
+  // If a teacher wants to preview the student view, they can pass ?as=student
+  const isStudentPreview = isActualTeacher && resolvedSearchParams?.as === "student";
+  
+  // For rendering purposes, a teacher in student preview mode is treated as a student
+  const isTeacher = isActualTeacher && !isStudentPreview;
 
   const [publishedBlueprintResult, materialsResult] = await Promise.all([
     supabase
@@ -155,14 +162,36 @@ export default async function ClassOverviewPage({
       (assignment) => assignment.activityType === "flashcards"
     );
   } else {
-    const { data: recipients } = await supabase
-      .from("assignment_recipients")
-      .select("assignment_id,status,assigned_at")
-      .eq("student_id", user.id)
-      .order("assigned_at", { ascending: false })
-      .limit(20);
+    // If it's a teacher previewing as a student, we fake an empty assignment list or load class assignments.
+    // For simplicity, we can load up to 20 recently assigned items across the class.
+    let recipientsData: Array<{ assignment_id: string; status: string; assigned_at: string }> = [];
+    
+    if (isStudentPreview) {
+      // Teacher previewing: Just fetch the assignments from the class directly to show what's ongoing.
+      const { data: recentAssignments } = await supabase
+        .from("assignments")
+        .select("id,created_at")
+        .eq("class_id", classId)
+        .order("created_at", { ascending: false })
+        .limit(20);
+        
+      recipientsData = (recentAssignments ?? []).map(a => ({
+        assignment_id: a.id,
+        status: "assigned",
+        assigned_at: a.created_at
+      }));
+    } else {
+      // Real student
+      const { data: recipients } = await supabase
+        .from("assignment_recipients")
+        .select("assignment_id,status,assigned_at")
+        .eq("student_id", user.id)
+        .order("assigned_at", { ascending: false })
+        .limit(20);
+      recipientsData = recipients ?? [];
+    }
 
-    const assignmentIds = (recipients ?? []).map((recipient) => recipient.assignment_id);
+    const assignmentIds = recipientsData.map((recipient) => recipient.assignment_id);
     const { data: assignments } =
       assignmentIds.length > 0
         ? await supabase
@@ -187,13 +216,13 @@ export default async function ClassOverviewPage({
     );
     const activityById = new Map((activities ?? []).map((activity) => [activity.id, activity]));
     const { data: submissions } =
-      assignmentIds.length > 0
+      assignmentIds.length > 0 && !isStudentPreview
         ? await supabase
             .from("submissions")
             .select("assignment_id")
             .eq("student_id", user.id)
             .in("assignment_id", assignmentIds)
-        : { data: null };
+        : { data: [] };
 
     const submissionCountByAssignmentId = new Map<string, number>();
     (submissions ?? []).forEach((submission) => {
@@ -204,7 +233,7 @@ export default async function ClassOverviewPage({
     });
 
     const mappedStudentAssignments: Array<ActivityAssignmentSummary | null> = (
-      recipients ?? []
+      recipientsData
     ).map((recipient) => {
       const assignment = assignmentById.get(recipient.assignment_id);
       if (!assignment) {
@@ -291,6 +320,7 @@ export default async function ClassOverviewPage({
         quizAssignments={studentQuizAssignments}
         flashcardsAssignments={studentFlashcardsAssignments}
         initialView={resolvedSearchParams?.view === "chat" ? "chat" : null}
+        isPreviewMode={isStudentPreview}
       />
     );
   }
@@ -313,12 +343,19 @@ export default async function ClassOverviewPage({
         breadcrumbs={[{ label: "Dashboard", href: "/teacher/dashboard" }, { label: classRow.title }]}
       />
       <div className="mx-auto w-full max-w-5xl px-6 py-16">
-        <header className="mb-10 rounded-[2rem] border border-default bg-white px-7 py-7 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ui-subtle">Class Overview</p>
-          <h1 className="editorial-title mt-2 text-4xl text-ui-primary">{classRow.title}</h1>
-          <p className="mt-2 text-sm text-ui-muted">
-            {classRow.subject || "General"} · {classRow.level || "Mixed level"}
-          </p>
+        <header className="mb-10 flex flex-col justify-between gap-4 rounded-[2rem] border border-default bg-white px-7 py-7 shadow-sm sm:flex-row sm:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ui-subtle">Class Overview</p>
+            <h1 className="editorial-title mt-2 text-4xl text-ui-primary">{classRow.title}</h1>
+            <p className="mt-2 text-sm text-ui-muted">
+              {classRow.subject || "General"} · {classRow.level || "Mixed level"}
+            </p>
+          </div>
+          <div>
+            <Button asChild variant="outline" className="ui-motion-lift">
+              <Link href={`/classes/${classRow.id}?as=student`}>Preview as Student</Link>
+            </Button>
+          </div>
         </header>
 
         {errorMessage ? (
