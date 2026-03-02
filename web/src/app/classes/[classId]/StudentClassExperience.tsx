@@ -31,6 +31,7 @@ type StudentClassExperienceProps = {
   quizAssignments: ActivityAssignmentSummary[];
   flashcardsAssignments: ActivityAssignmentSummary[];
   initialView?: "chat" | null;
+  isPreviewMode?: boolean;
 };
 
 function formatDueDate(value: string | null) {
@@ -66,6 +67,7 @@ export default function StudentClassExperience({
   quizAssignments,
   flashcardsAssignments,
   initialView = null,
+  isPreviewMode = false,
 }: StudentClassExperienceProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -73,6 +75,8 @@ export default function StudentClassExperience({
   const [activeWidget, setActiveWidget] = useState<FocusWidget | null>(
     initialView === "chat" ? "chat" : null,
   );
+  const previewQuerySuffix = isPreviewMode ? "?as=student" : "";
+  const dashboardHref = isPreviewMode ? "/teacher/dashboard" : "/student/dashboard";
 
   useEffect(() => {
     const currentView = searchParams.get("view");
@@ -173,7 +177,7 @@ export default function StudentClassExperience({
           {renderAssignmentList(
             chatAssignments,
             "No chat assignments yet. Use AI Chat while you wait.",
-            (assignmentId) => `/classes/${classId}/assignments/${assignmentId}/chat`,
+            (assignmentId) => `/classes/${classId}/assignments/${assignmentId}/chat${previewQuerySuffix}`,
           )}
         </div>
       );
@@ -186,7 +190,7 @@ export default function StudentClassExperience({
           {renderAssignmentList(
             quizAssignments,
             "No quiz assignments yet. Your teacher will publish them here.",
-            (assignmentId) => `/classes/${classId}/assignments/${assignmentId}/quiz`,
+            (assignmentId) => `/classes/${classId}/assignments/${assignmentId}/quiz${previewQuerySuffix}`,
           )}
         </div>
       );
@@ -199,7 +203,8 @@ export default function StudentClassExperience({
           {renderAssignmentList(
             flashcardsAssignments,
             "No flashcard assignments yet. Your teacher will publish them here.",
-            (assignmentId) => `/classes/${classId}/assignments/${assignmentId}/flashcards`,
+            (assignmentId) =>
+              `/classes/${classId}/assignments/${assignmentId}/flashcards${previewQuerySuffix}`,
           )}
         </div>
       );
@@ -233,9 +238,22 @@ export default function StudentClassExperience({
     <div className="surface-page min-h-screen">
       <AuthHeader
         activeNav="dashboard"
-        classContext={{ classId, isTeacher: false }}
-        breadcrumbs={[{ label: "Dashboard", href: "/student/dashboard" }, { label: classTitle }]}
+        accountType={isPreviewMode ? "teacher" : "student"}
+        classContext={{ classId, isTeacher: false, preserveStudentPreview: isPreviewMode }}
+        breadcrumbs={[{ label: "Dashboard", href: dashboardHref }, { label: classTitle }]}
       />
+
+      {isPreviewMode && (
+        <div className="bg-amber-100 px-4 py-3 text-center text-sm font-medium text-amber-900 shadow-sm flex items-center justify-center gap-4">
+          <span>You are currently previewing this class as a student.</span>
+          <Link 
+            href={`/classes/${classId}`} 
+            className="rounded-full bg-amber-200 px-4 py-1.5 text-xs font-semibold text-amber-900 transition-colors hover:bg-amber-300"
+          >
+            Exit Preview
+          </Link>
+        </div>
+      )}
 
       <div className="mx-auto w-full max-w-6xl px-6 py-16">
         <header className="mb-8 space-y-2">
